@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import CardFilter from '../components/CardFilter'
 import TrollFace from "../assets/trollFace.jpg"
+import ProductDescriptionBuilder from '../components/ProductDescriptionBuilder'
+import DragAndDropUploader from '../components/DragAndDropUploader'
 
 function Home() {
   const [coordernadaX, setCoordernadaX] = useState(4)
@@ -29,7 +31,7 @@ function Home() {
       {/* top-[30%] right-[40%] */}
 
       {/* top --> entre 60 y 10  //////   right --> entre 10 y 70*/}
-      <div className={`w-[350px] h-[300px] shadow-xl rounded-xl flex flex-col justify-center items-center gap-4 transition-all duration-500 transform absolute top-[${coordernadaY}0%] right-[${coordernadaX}0%]`}
+      <div className={`hidden w-[350px] h-[300px] shadow-xl rounded-xl flex flex-col justify-center items-center gap-4 transition-all duration-500 transform absolute top-[${coordernadaY}0%] right-[${coordernadaX}0%]`}
         style={{
           backgroundImage: `url(${TrollFace})`,
           backgroundSize: 'cover',
@@ -47,6 +49,10 @@ function Home() {
           </div>
         </div>
       </div>
+
+      {/* <ProductDescriptionBuilder /> */}
+
+      <DragAndDropUploader/>
     </div>
   )
 }
