@@ -3,6 +3,7 @@ import CardFilter from '../components/CardFilter'
 import TrollFace from "../assets/trollFace.jpg"
 import ProductDescriptionBuilder from '../components/ProductDescriptionBuilder'
 import DragAndDropUploader from '../components/DragAndDropUploader'
+import DescriptionForm from '../components/DescriptionForm'
 
 function Home() {
   const [coordernadaX, setCoordernadaX] = useState(4)
@@ -53,6 +54,7 @@ function Home() {
       {/* <ProductDescriptionBuilder /> */}
 
       <DragAndDropUploader/>
+      <DescriptionForm/>
     </div>
   )
 }

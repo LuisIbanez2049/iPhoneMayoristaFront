@@ -81,8 +81,6 @@ export default function DragAndDropUploader() {
       >
         Subir imagen
       </button>
-
-      <img className="w-[300px]" src="https://res.cloudinary.com/dlyoighih/image/upload/v1755578333/y7azbfqdnkxg681fx6rr.png" alt="" />
     </div>
   );
 }
