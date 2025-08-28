@@ -55,6 +55,10 @@ function Home() {
 
       <DragAndDropUploader/>
       <DescriptionForm/>
+    
+      <div className='w-full h-[300px] flex flex-col items-center border border-red-600'>
+        <div className='border border-red-500 w-[270px] h-[150px]'></div>
+      </div>
     </div>
   )
 }
