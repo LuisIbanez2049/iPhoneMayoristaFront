@@ -5,6 +5,28 @@ const DescriptionForm = () => {
   const editorRef = useRef(null);
   const [content, setContent] = useState("");
 
+
+  //----------------------------------ESTADOS Y FUNCIONES PARA LOS FORMULARIOS DE IMAGEN Y VIDEO----------------------------------------------
+   const [link, setLink] = useState("");
+   const [aspect, setAspect] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Link enviado:", link);
+    // Aquí puedes hacer lo que necesites con el link
+  };
+
+  const handleSubmitVideo = (e) => {
+    e.preventDefault();
+    console.log("Video link:", link, "Aspecto:", aspect);
+  };
+
+  //----------------------------------ESTADOS Y FUNCIONES PARA LOS FORMULARIOS DE IMAGEN Y VIDEO----------------------------------------------
+
+
+
+
+
    // Guarda lo que el usuario editó
   const handleSave = () => {
     if (editorRef.current) {
@@ -274,12 +296,153 @@ const DescriptionForm = () => {
 
   return (
     <div className="w-full flex flex-col items-center">
+
+
+      {/* -------------------------------------------------------FORMULARIO IMAGEN/VIDEO------------------------------------------------------- */}
+      <div className="z-10 w-full h-[100vh] border border-red-600 fixed top-0 flex flex-col justify-center items-center">
+        <div className="border border-blue-400">
+
+          {/* -------------------------------------------------------FORMULARIO IMAGEN------------------------------------------------------- */}
+          <div className="hidden flex items-center justify-center bg-gray-100">
+            <form
+              onSubmit={handleSubmit}
+              className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md"
+            >
+              <h2 className="text-2xl font-semibold text-center text-gray-900 mb-6">
+                Introducir enlace
+              </h2>
+
+              <input
+                type="url"
+                placeholder="https://ejemplo.com"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+                required
+                className="w-full px-4 py-3 mb-4 border border-gray-300 rounded-lg 
+                     focus:outline-none focus:ring-2 focus:ring-black focus:border-black 
+                     placeholder-gray-400 transition"
+              />
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-black text-white rounded-lg font-medium 
+                     hover:bg-gray-800 active:scale-95 transition"
+              >
+                Aceptar
+              </button>
+            </form>
+          </div>
+          {/* -------------------------------------------------------FORMULARIO IMAGEN------------------------------------------------------- */}
+
+
+
+
+          {/* -------------------------------------------------------FORMULARIO VIDEO------------------------------------------------------- */}
+          <div className="flex items-center justify-center bg-gray-100">
+            <form
+              onSubmit={handleSubmit}
+              className="relative bg-white shadow-lg rounded-xl p-8 w-[400px]"
+            >
+              {/* Botón X */}
+              <button
+                type="button"
+                className="absolute top-3 right-3 text-gray-400 hover:text-black transition"
+              >
+                {/* Ícono X */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 8.586L4.293 2.879 2.879 4.293 8.586 10l-5.707 5.707 1.414 1.414L10 11.414l5.707 5.707 1.414-1.414L11.414 10l5.707-5.707-1.414-1.414L10 8.586z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+
+              <h2 className="text-2xl font-semibold text-center text-gray-900 mb-6">
+                Agregar video
+              </h2>
+
+              {/* Input */}
+              <input
+                type="url"
+                placeholder="https://video.com/ejemplo"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+                required
+                className="w-full px-4 py-3 mb-6 border border-gray-300 rounded-lg 
+                     focus:outline-none focus:ring-2 focus:ring-black focus:border-black 
+                     placeholder-gray-400 transition"
+              />
+
+              {/* Botones de aspecto */}
+              <div className="flex justify-center gap-4 mb-6">
+                {/* Botón 9:16 */}
+                <button
+                  type="button"
+                  onClick={() => setAspect("9:16")}
+                  className={`flex flex-col items-center px-4 py-2 border rounded-lg transition 
+                       ${aspect === "9:16" ? "border-black bg-gray-100" : "border-gray-300 hover:border-black"}`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 mb-1"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <rect x="8" y="3" width="8" height="18" rx="2" ry="2" />
+                  </svg>
+                  <span className="text-sm">9:16</span>
+                </button>
+
+                {/* Botón 16:9 */}
+                <button
+                  type="button"
+                  onClick={() => setAspect("16:9")}
+                  className={`flex flex-col items-center px-4 py-2 border rounded-lg transition 
+                       ${aspect === "16:9" ? "border-black bg-gray-100" : "border-gray-300 hover:border-black"}`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 mb-1"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <rect x="3" y="8" width="18" height="8" rx="2" ry="2" />
+                  </svg>
+                  <span className="text-sm">16:9</span>
+                </button>
+              </div>
+
+              {/* Botón Aceptar */}
+              <button
+                type="submit"
+                className="w-full py-3 bg-black text-white rounded-lg font-medium 
+                     hover:bg-gray-800 active:scale-95 transition"
+              >
+                Aceptar
+              </button>
+            </form>
+          </div>
+          {/* -------------------------------------------------------FORMULARIO VIDEO------------------------------------------------------- */}
+
+
+
+        </div>
+      </div>
+      {/* -------------------------------------------------------FORMULARIO IMAGEN------------------------------------------------------- */}
+      
+
       <div
         className="w-[90%]"
         style={{
           border: "1px solid #ccc",
           borderRadius: 8,
-          overflow: "hidden",
+          overflow: "visible",
           margin: "20px 0",
         }}
       >
@@ -294,6 +457,8 @@ const DescriptionForm = () => {
             borderBottom: "1px solid #ddd",
             alignItems: "center",
           }}
+
+          className=" sticky top-0 rounded-[8px]"
         >
           {/* Formato de texto */}
           <div>
