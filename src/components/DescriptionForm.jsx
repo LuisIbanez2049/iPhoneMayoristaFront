@@ -3,17 +3,22 @@ import HtmlToTailwind from "./HtmlToTailwind";
 
 const DescriptionForm = () => {
   const editorRef = useRef(null);
+  const [savedRange, setSavedRange] = useState(null);
   const [content, setContent] = useState("");
 
 
   //----------------------------------ESTADOS Y FUNCIONES PARA LOS FORMULARIOS DE IMAGEN Y VIDEO----------------------------------------------
+  const [viewImageForm, setViewImageForm] = useState(false)
+  const [viewVideForm, setViewVideoForm] = useState(false)
    const [link, setLink] = useState("");
    const [aspect, setAspect] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmitImage = (e) => {
     e.preventDefault();
     console.log("Link enviado:", link);
     // Aquí puedes hacer lo que necesites con el link
+    insertMedia("image")
+    console.log("entra aui?")
   };
 
   const handleSubmitVideo = (e) => {
@@ -24,6 +29,39 @@ const DescriptionForm = () => {
   //----------------------------------ESTADOS Y FUNCIONES PARA LOS FORMULARIOS DE IMAGEN Y VIDEO----------------------------------------------
 
 
+  //--------------------------------EVITA PERDER EL FOCO CUANDO HAGO CLICK FUERA DEL CONTENT EDITABLE---------
+  const handleBlur = (e) => {
+    // Si se hace blur a un input o textarea, no forzar focus
+    if (
+      e.relatedTarget &&
+      (e.relatedTarget.tagName === "INPUT" ||
+        e.relatedTarget.tagName === "TEXTAREA")
+    ) {
+      return;
+    }
+    // Re-enfocar el contentEditable
+    editorRef.current.focus();
+  };
+
+
+    // Guardar la selección antes de perder el foco
+  const handleSelection = () => {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      setSavedRange(selection.getRangeAt(0));
+    }
+  };
+
+  // Restaurar selección después de cerrar modal/input
+  const restoreSelection = () => {
+    if (savedRange) {
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(savedRange);
+      editorRef.current.focus();
+    }
+  };
+  //--------------------------------EVITA PERDER EL FOCO CUANDO HAGO CLICK FUERA DEL CONTENT EDITABLE---------
 
 
 
@@ -83,7 +121,7 @@ const DescriptionForm = () => {
 
 
 
-
+//------------------------------------------------FUNCION PARA EDITAR EL TEXTO CON ESTILOS EN TAILWIND (ALTERNATIVA)---NO ESTA EN USO--------
   const addFormat = (format) => {
   const selection = window.getSelection();
   if (!selection.rangeCount) return;
@@ -141,7 +179,7 @@ const DescriptionForm = () => {
     node.removeAttribute("class");
   }
 };
-
+//------------------------------------------------FUNCION PARA EDITAR EL TEXTO CON ESTILOS EN TAILWIND (ALTERNATIVA)---NO ESTA EN USO--------
 
 
 
@@ -249,27 +287,30 @@ const DescriptionForm = () => {
   // Insertar imagen o video
   const insertMedia = (type) => {
     if (type === "image") {
-      const url = prompt("Ingresa la URL de la imagen:");
-      if (url) {
+      
+      if (link) {
+        console.log("Entra en el exCommand?")
         execCommand(
           "insertHTML",
           `<p style="text-align: center;">
             <img 
              class="sm:w-[700px] sm:h-auto w-full block m-auto"
-             src="${url}" alt="imagen" />
+             src="${link}" alt="imagen" />
           </p>`
         );
+        setLink("")
+        setViewImageForm(false)
       }
     } else if (type === "video") {
-      const url = prompt("Ingresa la URL del video (YouTube, por ejemplo):");
-      if (url) {
+      //const url = prompt("Ingresa la URL del video (YouTube, por ejemplo):");
+      if (link) {
         execCommand(
           "insertHTML",
           `
             <p style="text-align: center;">
               <iframe
                 class="sm:w-[560px]  sm:h-[315px] w-[290px] h-[160px] rounded-lg m-auto"
-                src="${url}" 
+                src="${link}" 
                 frameborder="0" 
                 allowfullscreen
                 
@@ -281,7 +322,46 @@ const DescriptionForm = () => {
     }
   };
 
+
+  //-----------------------COPIA DE FUNCION "insertMedia"----------------
+  //   const insertMedia = (type) => {
+  //   if (type === "image") {
+  //     const url = prompt("Ingresa la URL de la imagen:");
+  //     if (url) {
+  //       execCommand(
+  //         "insertHTML",
+  //         `<p style="text-align: center;">
+  //           <img 
+  //            class="sm:w-[700px] sm:h-auto w-full block m-auto"
+  //            src="${url}" alt="imagen" />
+  //         </p>`
+  //       );
+  //     }
+  //   } else if (type === "video") {
+  //     const url = prompt("Ingresa la URL del video (YouTube, por ejemplo):");
+  //     if (url) {
+  //       execCommand(
+  //         "insertHTML",
+  //         `
+  //           <p style="text-align: center;">
+  //             <iframe
+  //               class="sm:w-[560px]  sm:h-[315px] w-[290px] h-[160px] rounded-lg m-auto"
+  //               src="${url}" 
+  //               frameborder="0" 
+  //               allowfullscreen
+                
+  //             </iframe>
+  //           </p>
+  //         `
+  //       );
+  //     }
+  //   }
+  // };
+    //-----------------------COPIA DE FUNCION "insertMedia"----------------
+
   // Copiar HTML generado
+  
+  
   const copyHtml = () => {
     const html = editorRef.current.innerHTML;
     navigator.clipboard.writeText(html).then(() => {
@@ -299,15 +379,35 @@ const DescriptionForm = () => {
 
 
       {/* -------------------------------------------------------FORMULARIO IMAGEN/VIDEO------------------------------------------------------- */}
-      <div className="z-10 w-full h-[100vh] border border-red-600 fixed top-0 flex flex-col justify-center items-center">
-        <div className="border border-blue-400">
+      <div className={`z-10 w-full h-[100vh] border border-red-600 fixed top-0 flex flex-col justify-center items-center transition-opacity duration-500 ${viewImageForm ? "opacity-100 pointer-events-auto" : viewVideForm ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
+        <div className=" relative p-2 border border-blue-400 flex flex-col justify-center items-center">
 
           {/* -------------------------------------------------------FORMULARIO IMAGEN------------------------------------------------------- */}
-          <div className="hidden flex items-center justify-center bg-gray-100">
+          <div className={` relative flex items-center justify-center bg-gray-100 rounded-xl transition-opacity duration-500 ${viewImageForm ? " opacity-100 pointer-events-auto" : " opacity-0 pointer-events-none"}`}>
             <form
-              onSubmit={handleSubmit}
-              className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md"
+              onSubmit={handleSubmitImage}
+              className=" relative bg-white shadow-lg rounded-xl p-8 w-full max-w-md"
             >
+              {/* Botón X */}
+              <button
+                type="button"
+                className="absolute top-3 right-3 text-gray-400 hover:text-black transition"
+                onClick={() => setViewImageForm(false)}
+              >
+                {/* Ícono X */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 8.586L4.293 2.879 2.879 4.293 8.586 10l-5.707 5.707 1.414 1.414L10 11.414l5.707 5.707 1.414-1.414L11.414 10l5.707-5.707-1.414-1.414L10 8.586z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
               <h2 className="text-2xl font-semibold text-center text-gray-900 mb-6">
                 Introducir enlace
               </h2>
@@ -315,6 +415,7 @@ const DescriptionForm = () => {
               <input
                 type="url"
                 placeholder="https://ejemplo.com"
+                onBlur={restoreSelection} // 👈 cuando se cierra, vuelve el foco al editor
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
                 required
@@ -338,15 +439,16 @@ const DescriptionForm = () => {
 
 
           {/* -------------------------------------------------------FORMULARIO VIDEO------------------------------------------------------- */}
-          <div className="flex items-center justify-center bg-gray-100">
+          <div className={` absolute flex items-center justify-center bg-gray-100 rounded-xl transition-opacity duration-500 ${viewVideForm ? " opacity-100 pointer-events-auto" : " opacity-0 pointer-events-none"}`}>
             <form
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmitVideo}
               className="relative bg-white shadow-lg rounded-xl p-8 w-[400px]"
             >
               {/* Botón X */}
               <button
                 type="button"
                 className="absolute top-3 right-3 text-gray-400 hover:text-black transition"
+                onClick={() => setViewVideoForm(false)}
               >
                 {/* Ícono X */}
                 <svg
@@ -371,6 +473,7 @@ const DescriptionForm = () => {
               <input
                 type="url"
                 placeholder="https://video.com/ejemplo"
+                onBlur={restoreSelection} // 👈 cuando se cierra, vuelve el foco al editor
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
                 required
@@ -549,7 +652,7 @@ const DescriptionForm = () => {
           </div>
 
           {/* Insertar elementos */}
-          <button type="button" onClick={() => insertMedia("image")}>
+          <button type="button" onClick={() => setViewImageForm(true)}>
             <svg
               className="w-[24px] h-[24px]"
               xmlns="http://www.w3.org/2000/svg"
@@ -559,7 +662,7 @@ const DescriptionForm = () => {
               <path d="M21 15V18H24V20H21V23H19V20H16V18H19V15H21ZM21.0082 3C21.556 3 22 3.44495 22 3.9934V13H20V5H4V18.999L14 9L17 12V14.829L14 11.8284L6.827 19H14V21H2.9918C2.44405 21 2 20.5551 2 20.0066V3.9934C2 3.44476 2.45531 3 2.9918 3H21.0082ZM8 7C9.10457 7 10 7.89543 10 9C10 10.1046 9.10457 11 8 11C6.89543 11 6 10.1046 6 9C6 7.89543 6.89543 7 8 7Z"></path>
             </svg>
           </button>
-          <button type="button" onClick={() => insertMedia("video")}>
+          <button type="button" onClick={() => setViewVideoForm(true)}>
             <svg
               className="w-[24px] h-[24px]"
               xmlns="http://www.w3.org/2000/svg"
@@ -626,6 +729,11 @@ const DescriptionForm = () => {
           ref={editorRef}
           contentEditable
           spellCheck="false"
+          suppressContentEditableWarning={true}
+          //onBlur={handleBlur}
+          onMouseUp={handleSelection}  // Guarda selección al clickear
+          onKeyUp={handleSelection}    // Guarda selección al escribir
+          className=" outline-none"
           style={{
             minHeight: "400px",
             padding: "15px",
