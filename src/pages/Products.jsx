@@ -68,7 +68,7 @@ function Products() {
         <div className={`w-[100%] flex flex-row justify-center px-[10%] mt-[80px] gap-8 flex-wrap ${seeFilteredProduct ? "hidden" : "show"}`}>
           {products && products.length > 0 && products.map((product) => {
             return (
-              <CardProduct img={product.firstImage} name={product.name}/>
+              <CardProduct img={product.firstImage} name={product.name} id={product.id}/>
             )
           })}
             
@@ -79,7 +79,7 @@ function Products() {
         <div className={`w-[100%] flex flex-row justify-center px-[10%] gap-8 flex-wrap ${seeFilteredProduct ? "show" : "hidden"}`}>
           {filteredProducts && filteredProducts.length > 0 && filteredProducts.map((product) => {
             return (
-              <CardProduct img={product.firstImage} name={product.name}/>
+              <CardProduct img={product.firstImage} name={product.name} id={product.id}/>
             )
           })}
             

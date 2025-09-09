@@ -60,8 +60,8 @@ function Home() {
       <DescriptionForm />
 
       <div className='w-full flex flex-col items-center border border-red-600'>
-        <div className='hidden border border-blue-600 w-[95%]'>
-          <HtmlToTailwind html={'<p>Escribe aquí tu contenido...</p><div><p>Escribe aquí tu contenido...</p><div><div><div><p class=" text-center"><img alt="imagen" class="mx-auto w-[250px] m-auto block" src="https://res.cloudinary.com/dlyoighih/image/upload/v1748106382/iPadAir2_ntoqdo.jpg"></p><p class=" text-center"><br></p><p class=" text-center"><b><i><u><font size="5">Que pasa</font></u></i></b>?</p><p class=" text-center"><br></p><p class=" text-center"><iframe src="https://res.cloudinary.com/dlyoighih/video/upload/v1747970285/samples/elephants.mp4" frameborder="0" allowfullscreen="" iframe="" class="sm:w-[20vw] sm:h-[196px] w-full h-[200px] rounded-lg m-auto block"></iframe></p><p class=" text-center"><br></p><p class=" text-center"><b><font size="5"><u>ARI GAMEPLAYS</u></font></b></p><p class=" text-center"><br></p><p style="text-align: center;"><img src="https://res.cloudinary.com/dlyoighih/image/upload/v1755578333/y7azbfqdnkxg681fx6rr.png" alt="imagen" class="m-auto block" style="width: 300px; display: block; margin: 0px auto;"></p><div></div></div></div></div></div>'} />
+        <div className=' border border-blue-600 w-[95%]'>
+          <HtmlToTailwind html={''} />
 
         </div>
       </div>

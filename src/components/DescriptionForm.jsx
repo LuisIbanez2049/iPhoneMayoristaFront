@@ -11,7 +11,7 @@ const DescriptionForm = () => {
   const [viewImageForm, setViewImageForm] = useState(false)
   const [viewVideForm, setViewVideoForm] = useState(false)
    const [link, setLink] = useState("");
-   const [aspect, setAspect] = useState(null);
+   const [aspect, setAspect] = useState("16:9");
 
   const handleSubmitImage = (e) => {
     e.preventDefault();
@@ -24,6 +24,8 @@ const DescriptionForm = () => {
   const handleSubmitVideo = (e) => {
     e.preventDefault();
     console.log("Video link:", link, "Aspecto:", aspect);
+    insertMedia("video")
+
   };
 
   //----------------------------------ESTADOS Y FUNCIONES PARA LOS FORMULARIOS DE IMAGEN Y VIDEO----------------------------------------------
@@ -62,6 +64,26 @@ const DescriptionForm = () => {
     }
   };
   //--------------------------------EVITA PERDER EL FOCO CUANDO HAGO CLICK FUERA DEL CONTENT EDITABLE---------
+
+
+
+
+  //--------------------------------TRANSFORMAR LINK DE YOUTUBE PARA PODER INCRUSTAR EN MI WEB---------
+  function getEmbedUrl(url) {
+  let videoId;
+
+  // Si viene en formato "watch?v="
+  if (url.includes("watch?v=")) {
+    videoId = url.split("watch?v=")[1].split("&")[0];
+  } 
+  // Si viene en formato "youtu.be/"
+  else if (url.includes("youtu.be/")) {
+    videoId = url.split("youtu.be/")[1].split("?")[0];
+  }
+
+  return `https://www.youtube.com/embed/${videoId}`;
+}
+//--------------------------------TRANSFORMAR LINK DE YOUTUBE PARA PODER INCRUSTAR EN MI WEB---------
 
 
 
@@ -192,7 +214,6 @@ const DescriptionForm = () => {
     
     const range = selection.getRangeAt(0);
     let node = range.commonAncestorContainer;
-    console.log(node.firstChild)
     // Si es nodo de texto, subir al padre
     if (node.nodeType === 3) {
       node = node.parentNode;
@@ -235,33 +256,34 @@ const DescriptionForm = () => {
   };
 
   // función auxiliar para redimensionar iframes manteniendo relación 16:9
-  const resizeIframe = (iframe, increase) => {
-    let className = iframe.className;
+  // función auxiliar para redimensionar iframes detectando su aspecto automáticamente
+const resizeIframe = (iframe, increase) => {
+  let className = iframe.className;
 
-    const widthRegex = /w-\[(\d+)px\]/;
-    const heightRegex = /h-\[(\d+)px\]/;
+  const widthRegex = /w-\[(\d+)px\]/;
+  const heightRegex = /h-\[(\d+)px\]/;
 
-    let newClass = className;
+  let newClass = className;
 
-    if (widthRegex.test(className)) {
-      const currentW = parseInt(className.match(widthRegex)[1]); // ancho en vw
-      const newW = increase ? currentW + 30 : Math.max(20, currentW - 30);
+  if (widthRegex.test(className) && heightRegex.test(className)) {
+    const currentW = parseInt(className.match(widthRegex)[1]); // ancho px
+    const currentH = parseInt(className.match(heightRegex)[1]); // alto px
 
-      // Calcular nueva altura proporcional (16:9)
-      const newH = Math.round(((newW * 9) / 16));
-      // 👆 (newW vw → px) → (ancho px * 9 / 16)
+    // Detectar relación de aspecto original
+    const ratio = currentW / currentH; // ej: 16/9 ≈ 1.78, 9/16 ≈ 0.56
 
-      // Actualizar ancho y alto en la clase
-      newClass = newClass.replace(widthRegex, `w-[${newW}px]`);
-      if (heightRegex.test(newClass)) {
-        newClass = newClass.replace(heightRegex, `h-[${newH}px]`);
-      } else {
-        newClass += ` h-[${newH}px]`;
-      }
-    }
+    const newW = increase ? currentW + 30 : Math.max(100, currentW - 30);
+    const newH = Math.round(newW / ratio);
 
-    iframe.className = newClass;
-  };
+    // actualizar ancho y alto en la clase
+    newClass = newClass.replace(widthRegex, `w-[${newW}px]`);
+    newClass = newClass.replace(heightRegex, `h-[${newH}px]`);
+  }
+
+  iframe.className = newClass;
+};
+ 
+
 
 
   // función auxiliar para redimensionar imagenes
@@ -304,13 +326,19 @@ const DescriptionForm = () => {
     } else if (type === "video") {
       //const url = prompt("Ingresa la URL del video (YouTube, por ejemplo):");
       if (link) {
-        execCommand(
+        let embedLink = "";
+        if (link.includes("youtu")) {
+          console.log("Link: " + link + "\n" + "Embed link: " + getEmbedUrl(link))
+          embedLink = getEmbedUrl(link)
+        }
+        if (aspect == "16:9") {
+          execCommand(
           "insertHTML",
           `
             <p style="text-align: center;">
               <iframe
-                class="sm:w-[560px]  sm:h-[315px] w-[290px] h-[160px] rounded-lg m-auto"
-                src="${link}" 
+                class="sm:w-[560px]  sm:h-[315px] w-full h-[160px] rounded-lg m-auto"
+                src="${embedLink ? embedLink : link}" 
                 frameborder="0" 
                 allowfullscreen
                 
@@ -318,50 +346,33 @@ const DescriptionForm = () => {
             </p>
           `
         );
+        setViewVideoForm(false)
+        setLink("")
+        } else {
+          execCommand(
+          "insertHTML",
+          `
+            <p style="text-align: center;">
+              <iframe
+                class="sm:w-[315px]  sm:h-[560px] w-full h-[520px] rounded-lg m-auto"
+                src="${embedLink ? embedLink : link}" 
+                frameborder="0" 
+                allowfullscreen
+                
+              </iframe>
+            </p>
+          `
+        );
+        setAspect("16:9")
+        setViewVideoForm(false)
+        setLink("")
+        }
       }
     }
   };
 
 
-  //-----------------------COPIA DE FUNCION "insertMedia"----------------
-  //   const insertMedia = (type) => {
-  //   if (type === "image") {
-  //     const url = prompt("Ingresa la URL de la imagen:");
-  //     if (url) {
-  //       execCommand(
-  //         "insertHTML",
-  //         `<p style="text-align: center;">
-  //           <img 
-  //            class="sm:w-[700px] sm:h-auto w-full block m-auto"
-  //            src="${url}" alt="imagen" />
-  //         </p>`
-  //       );
-  //     }
-  //   } else if (type === "video") {
-  //     const url = prompt("Ingresa la URL del video (YouTube, por ejemplo):");
-  //     if (url) {
-  //       execCommand(
-  //         "insertHTML",
-  //         `
-  //           <p style="text-align: center;">
-  //             <iframe
-  //               class="sm:w-[560px]  sm:h-[315px] w-[290px] h-[160px] rounded-lg m-auto"
-  //               src="${url}" 
-  //               frameborder="0" 
-  //               allowfullscreen
-                
-  //             </iframe>
-  //           </p>
-  //         `
-  //       );
-  //     }
-  //   }
-  // };
-    //-----------------------COPIA DE FUNCION "insertMedia"----------------
-
   // Copiar HTML generado
-  
-  
   const copyHtml = () => {
     const html = editorRef.current.innerHTML;
     navigator.clipboard.writeText(html).then(() => {
@@ -484,23 +495,6 @@ const DescriptionForm = () => {
 
               {/* Botones de aspecto */}
               <div className="flex justify-center gap-4 mb-6">
-                {/* Botón 9:16 */}
-                <button
-                  type="button"
-                  onClick={() => setAspect("9:16")}
-                  className={`flex flex-col items-center px-4 py-2 border rounded-lg transition 
-                       ${aspect === "9:16" ? "border-black bg-gray-100" : "border-gray-300 hover:border-black"}`}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 mb-1"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <rect x="8" y="3" width="8" height="18" rx="2" ry="2" />
-                  </svg>
-                  <span className="text-sm">9:16</span>
-                </button>
 
                 {/* Botón 16:9 */}
                 <button
@@ -519,6 +513,26 @@ const DescriptionForm = () => {
                   </svg>
                   <span className="text-sm">16:9</span>
                 </button>
+
+
+                {/* Botón 9:16 */}
+                <button
+                  type="button"
+                  onClick={() => setAspect("9:16")}
+                  className={`flex flex-col items-center px-4 py-2 border rounded-lg transition 
+                       ${aspect === "9:16" ? "border-black bg-gray-100" : "border-gray-300 hover:border-black"}`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 mb-1"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <rect x="8" y="3" width="8" height="18" rx="2" ry="2" />
+                  </svg>
+                  <span className="text-sm">9:16</span>
+                </button>
+
               </div>
 
               {/* Botón Aceptar */}

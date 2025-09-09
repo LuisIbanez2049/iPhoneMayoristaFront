@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Products from "./pages/Products";
+import Product from "./pages/Product";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -17,6 +18,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="/products" element={<Products/>}/>
             <Route path="/acategory:id" element={<Products/>}/>
+            <Route path="/product/:id" element = {<Product/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
