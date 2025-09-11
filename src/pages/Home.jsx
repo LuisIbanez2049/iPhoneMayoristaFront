@@ -56,9 +56,6 @@ function Home() {
 
       {/* <ProductDescriptionBuilder />*/}
 
-      <DragAndDropUploader />
-      <DescriptionForm />
-
       <div className='w-full flex flex-col items-center border border-red-600'>
         <div className=' border border-blue-600 w-[95%]'>
           <HtmlToTailwind html={''} />

@@ -90,15 +90,13 @@ function Product() {
 
 
   const { id } = useParams(); // obtiene el id desde la URL
-  const [productData, setProductData] = useState({id: 0, name: "", cant: 0, price: 0, fileLinks: [""], category: "", categoryId: 0, description: ""})
-  const [images, setImages] = useState([])
+  const [productData, setProductData] = useState({id: 0, name: "", stock: 0, price: 0, fileLinks: [""], category: "", categoryId: 0, description: ""})
 
   useEffect(() => {
     axios.get(`http://localhost:8080/api/product/${id}`)
       .then((response) => {
         console.log(response.data)
         setProductData(response.data)
-        setImages(response.data.imageLinks)
       })
       .catch((error) => {
         console.log(error)
@@ -106,30 +104,6 @@ function Product() {
 
   }, [])
   return (
-    // <div>
-    //   <h1 className='text-[30px] text-[#000000b2] font-bold'>PRODUCT</h1>
-    //   <h1 className='text-[20px] text-[#000000b2] font-semibold'>{productDeatils.name}</h1>
-
-    //   {images && images.length > 0 && images.map((link) => {
-    //     if (link.includes("video") || link.includes("youtu")) {
-    //       return <>
-    //         <iframe
-    //           class="sm:w-[560px]  sm:h-[315px] w-full h-[160px] rounded-lg"
-    //           src={link}
-    //           frameborder="0"
-    //           allowfullscreen
-    //         >
-
-    //         </iframe>
-    //       </>
-    //     } else {
-    //       return <>
-    //         <img className='w-[450px]' src={link} alt="" />
-    //       </>
-    //     }
-    //   })}
-    // </div>
-
     <div className="min-h-screen bg-white">
       {/* Fullscreen Modal */}
       {isFullscreen && (
@@ -166,10 +140,10 @@ function Product() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Carousel Section */}
-          <div className="lg:w-1/2 lg:h-[100vh] w-full border border-green-500 lg:sticky lg:top-[20px]">
+          <div className="lg:w-1/2 lg:h-[100vh] w-full lg:sticky lg:top-[20px]">
             <div className="bg-gray-50 rounded-2xl p-4 shadow-sm">
               <div className="relative bg-white rounded-xl overflow-hidden">
-                <div className="relative w-full lg:h-[600px] h-[350px] border border-red-600">
+                <div className="relative w-full lg:h-[600px] h-[350px]">
                   {renderMedia(productData.fileLinks[currentIndex])}
                   
                   {/* Navigation Buttons */}
@@ -252,12 +226,12 @@ function Product() {
               {/* Stock */}
               <div className="mb-8">
                 <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                  productData.cant > 0 
+                  productData.stock > 0 
                     ? 'bg-green-100 text-green-800' 
                     : 'bg-red-100 text-red-800'
                 }`}>
-                  {productData.cant > 0 
-                    ? `${productData.cant} en stock` 
+                  {productData.stock > 0 
+                    ? `${productData.stock} en stock` 
                     : 'Agotado'
                   }
                 </span>
@@ -276,7 +250,7 @@ function Product() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button 
                     className="bg-black text-white px-8 py-4 rounded-xl font-medium text-lg hover:bg-gray-800 transition-all duration-200 flex-1"
-                    disabled={productData.cant === 0}
+                    disabled={productData.stock === 0}
                   >
                     Añadir al carrito
                   </button>
