@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import CardFilter from '../components/CardFilter'
 import axios from 'axios'
 import CardProduct from '../components/CardProduct'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 function Products() {
 
@@ -11,6 +12,7 @@ function Products() {
   const[nameFilteredCategory, setNameFilteredCategory] = useState("")
   const [categorias, setCategorias] = useState([])
   const [seeFilteredProduct, setSeeFilteredProduct] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     axios.get("http://localhost:8080/api/category/")
@@ -25,13 +27,16 @@ function Products() {
   }, [])
 
   useEffect(() => {
+    setIsLoading(true)
     axios.get("http://localhost:8080/api/product/")
     .then((response) => {
       console.log(response.data)
       setProducts(response.data)
+      setIsLoading(false)
     })
     .catch((error) => {
       console.log(error)
+      setIsLoading(false)
     })
 
   }, [])
@@ -50,7 +55,8 @@ function Products() {
   }
 
   return (
-    <div className='my-[50px] px-[5%] pb-[2%] border border-black'>
+    <div className=' border border-black'>
+      <LoadingSpinner isLoading={isLoading}/>
         Products
         <div className='w-[100%] flex flex-row justify-center gap-8 flex-wrap'>
           {categorias && categorias.length > 0 && categorias.map((categoria) => {

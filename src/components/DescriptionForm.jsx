@@ -5,6 +5,7 @@ const DescriptionForm = ({onActualizarDescripcion}) => {
   const editorRef = useRef(null);
   const [savedRange, setSavedRange] = useState(null);
   const [content, setContent] = useState("");
+  const [areThereChanges, setAreThereChanges] = useState(false)
 
 
   //----------------------------------ESTADOS Y FUNCIONES PARA LOS FORMULARIOS DE IMAGEN Y VIDEO----------------------------------------------
@@ -375,6 +376,7 @@ const resizeIframe = (iframe, increase) => {
   // Copiar HTML generado
   const copyHtml = () => {
     handleSave()
+    setAreThereChanges(false)
     const html = editorRef.current.innerHTML;
     navigator.clipboard.writeText(html).then(() => {
       //alert("HTML copiado al portapapeles");
@@ -389,12 +391,12 @@ const resizeIframe = (iframe, increase) => {
   };
 
   return (
-    <div className="lg:w-[950px] flex flex-col items-center m-auto">
+    <div className="lg:w-[950px]  flex flex-col items-center m-auto">
 
 
       {/* -------------------------------------------------------FORMULARIO IMAGEN/VIDEO------------------------------------------------------- */}
-      <div className={`z-10 w-full h-[100vh] border border-red-600 fixed top-0 flex flex-col justify-center items-center transition-opacity duration-500 ${viewImageForm ? "opacity-100 pointer-events-auto" : viewVideForm ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
-        <div className=" relative p-2 border border-blue-400 flex flex-col justify-center items-center">
+      <div className={`z-10 w-full h-[100vh]  fixed top-0 flex flex-col justify-center items-center transition-opacity duration-500 ${viewImageForm ? "opacity-100 pointer-events-auto" : viewVideForm ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
+        <div className=" relative p-2  flex flex-col justify-center items-center">
 
           {/* -------------------------------------------------------FORMULARIO IMAGEN------------------------------------------------------- */}
           <div className={` relative flex items-center justify-center bg-gray-100 rounded-xl transition-opacity duration-500 ${viewImageForm ? " opacity-100 pointer-events-auto" : " opacity-0 pointer-events-none"}`}>
@@ -554,18 +556,25 @@ const resizeIframe = (iframe, increase) => {
 
         </div>
       </div>
-      {/* -------------------------------------------------------FORMULARIO IMAGEN------------------------------------------------------- */}
+      {/* -------------------------------------------------------FORMULARIO IMAGEN/VIDEO------------------------------------------------------- */}
       
 
       <div
         className="w-[90%]"
         style={{
-          border: "1px solid #ccc",
+          //border: "1px solid #ccc",
           borderRadius: 8,
           overflow: "visible",
           margin: "20px 0",
         }}
       >
+
+        <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-6 rounded-t-2xl mb-[15px]">
+          <h2 className="text-2xl font-bold text-white text-center">Descripción</h2>
+          <p className="text-gray-300 text-center mt-1">Agrega la descripción del producto abajo</p>
+        </div>
+
+
         {/* Barra de herramientas */}
         <div
           style={{
@@ -578,7 +587,7 @@ const resizeIframe = (iframe, increase) => {
             alignItems: "center",
           }}
 
-          className=" sticky top-0 rounded-[8px]"
+          className=" sticky top-6 rounded-[8px] shadow-lg"
         >
           {/* Formato de texto */}
           <div>
@@ -717,27 +726,27 @@ const resizeIframe = (iframe, increase) => {
             <i className="fa-solid fa-broom"></i>
           </button>
 
-          <button
+          {/* <button
           onClick={handleSave}
           className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition"
         >
           Guardar cambios
-        </button>
+        </button> */}
 
           {/* Copiar HTML */}
           <button
             type="button"
+            className={`${areThereChanges ? "bg-[#002fff]" : "bg-[#80808085]"} transition-all duration-400`}
             onClick={copyHtml}
             style={{
               marginLeft: "auto",
               padding: "5px 10px",
-              background: "#007bff",
               color: "white",
               border: "none",
               borderRadius: 4,
             }}
           >
-            📋 Copiar HTML
+            Guardar cambios
           </button>
         </div>
 
@@ -750,7 +759,7 @@ const resizeIframe = (iframe, increase) => {
           //onBlur={handleBlur}
           onMouseUp={handleSelection}  // Guarda selección al clickear
           onKeyUp={handleSelection}    // Guarda selección al escribir
-          className=" outline-none"
+          className=" outline-none border border-[#ccc] rounded-lg mt-[15px]"
           style={{
             minHeight: "400px",
             padding: "15px",
@@ -759,6 +768,8 @@ const resizeIframe = (iframe, increase) => {
             backgroundColor: "white",
           }}
           onInput={(e) => {
+            handleSave()
+            setAreThereChanges(true)
             const imgs = e.target.querySelectorAll("img");
             imgs.forEach((img) => {
               replaceClass(img, /^m-?auto$/, "m-auto");
@@ -777,8 +788,10 @@ const resizeIframe = (iframe, increase) => {
 
         </div>
 
+        
+
         {/* Vista previa del HTML (opcional) */}
-        <div
+        {/* <div
           style={{
             marginTop: "10px",
             padding: "10px",
@@ -797,7 +810,9 @@ const resizeIframe = (iframe, increase) => {
             <h1 className="font-bold text-[25px]">Content</h1>
             {content}
           </pre>
-        </div>
+        </div> */}
+
+
       </div>
     </div>
   );

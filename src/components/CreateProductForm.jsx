@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
-const CreateProductForm = ({onActualizar}) => {
+const CreateProductForm = ({ onActualizar }) => {
+
+    const [categories, setCategories] = useState([])
+    const [areThereChanges, setAreThereChanges] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
         price: '',
@@ -8,13 +12,25 @@ const CreateProductForm = ({onActualizar}) => {
         categoryId: ''
     });
 
-    const categories = [
-        { id: '1', name: 'Electronics' },
-        { id: '2', name: 'Clothing' },
-        { id: '3', name: 'Home & Kitchen' },
-        { id: '4', name: 'Books' },
-        { id: '5', name: 'Sports' }
-    ];
+    // const categories = [
+    //     { id: '1', name: 'Electronics' },
+    //     { id: '2', name: 'Clothing' },
+    //     { id: '3', name: 'Home & Kitchen' },
+    //     { id: '4', name: 'Books' },
+    //     { id: '5', name: 'Sports' }
+    // ];
+
+    useEffect(() => {
+    axios.get("http://localhost:8080/api/category/")
+    .then((response) => {
+      console.log(response.data)
+      setCategories(response.data)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+
+  }, [])
 
     const formatPrice = (value) => {
         if (!value) return '';
@@ -47,6 +63,7 @@ const CreateProductForm = ({onActualizar}) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        setAreThereChanges(true)
         if (name === 'price') {
             handlePriceChange(e);
         } else {
@@ -60,6 +77,7 @@ const CreateProductForm = ({onActualizar}) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Remove formatting for actual numeric value
+        setAreThereChanges(false)
         const numericPrice = formData.price ? parseFloat(formData.price.replace(/,/g, '')) : 0;
         const submitData = {
             ...formData,
@@ -72,116 +90,115 @@ const CreateProductForm = ({onActualizar}) => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4">
-            <div className="w-full max-w-md">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="bg-white rounded-2xl shadow-xl overflow-hidden"
-                >
-                    <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-6">
-                        <h2 className="text-2xl font-bold text-white text-center">Product Information</h2>
-                        <p className="text-gray-300 text-center mt-1">Enter product details below</p>
-                    </div>
-
-                    <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                        {/* Name Field */}
-                        <div className="space-y-2">
-                            <label htmlFor="name" className="block text-sm font-semibold text-gray-700">
-                                Name
-                            </label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
-                                placeholder="Enter product name"
-                                required
-                            />
+        <div className="min-h-screen flex items-center justify-center p-4 ">
+            <div className="lg:w-[950px] w-full flex flex-col items-center">
+                <div className='w-[90%]'>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="bg-white rounded-2xl border border-[#ccc] overflow-hidden"
+                    >
+                        <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-6">
+                            <h2 className="text-2xl font-bold text-white text-center">Características del producto</h2>
+                            <p className="text-gray-300 text-center mt-1">Agrega las características del producto abajo</p>
                         </div>
 
-                        {/* Price Field */}
-                        <div className="space-y-2">
-                            <label htmlFor="price" className="block text-sm font-semibold text-gray-700">
-                                Price
-                            </label>
-                            <div className="relative">
-                                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                        <form onSubmit={handleSubmit} className="p-8 space-y-6">
+                            {/* Name Field */}
+                            <div className="space-y-2">
+                                <label htmlFor="name" className="block text-sm font-semibold text-gray-700">
+                                    Name
+                                </label>
                                 <input
                                     type="text"
-                                    id="price"
-                                    name="price"
-                                    value={formData.price}
+                                    id="name"
+                                    name="name"
+                                    value={formData.name}
                                     onChange={handleChange}
-                                    className="w-full pl-9 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
-                                    placeholder="0.00"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
+                                    placeholder="Enter product name"
                                     required
                                 />
                             </div>
-                        </div>
 
-                        {/* Stock Field */}
-                        <div className="space-y-2">
-                            <label htmlFor="stock" className="block text-sm font-semibold text-gray-700">
-                                Stock
-                            </label>
-                            <input
-                                type="number"
-                                id="stock"
-                                name="stock"
-                                value={formData.stock}
-                                onChange={handleChange}
-                                min="0"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
-                                placeholder="Enter available stock"
-                                required
-                            />
-                        </div>
+                            {/* Price Field */}
+                            <div className="space-y-2">
+                                <label htmlFor="price" className="block text-sm font-semibold text-gray-700">
+                                    Price
+                                </label>
+                                <div className="relative">
+                                    <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                                    <input
+                                        type="text"
+                                        id="price"
+                                        name="price"
+                                        value={formData.price}
+                                        onChange={handleChange}
+                                        className="w-full pl-9 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
+                                        placeholder="0.00"
+                                        required
+                                    />
+                                </div>
+                            </div>
 
-                        {/* Category Field */}
-                        <div className="space-y-2">
-                            <label htmlFor="categoryId" className="block text-sm font-semibold text-gray-700">
-                                Category
-                            </label>
-                            <select
-                                id="categoryId"
-                                name="categoryId"
-                                value={formData.categoryId}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
-                                required
+                            {/* Stock Field */}
+                            <div className="space-y-2">
+                                <label htmlFor="stock" className="block text-sm font-semibold text-gray-700">
+                                    Stock
+                                </label>
+                                <input
+                                    type="number"
+                                    id="stock"
+                                    name="stock"
+                                    value={formData.stock}
+                                    onChange={handleChange}
+                                    min="0"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
+                                    placeholder="Enter available stock"
+                                    required
+                                />
+                            </div>
+
+                            {/* Category Field */}
+                            <div className="space-y-2">
+                                <label htmlFor="categoryId" className="block text-sm font-semibold text-gray-700">
+                                    Category
+                                </label>
+                                <select
+                                    id="categoryId"
+                                    name="categoryId"
+                                    value={formData.categoryId}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                                    required
+                                >
+                                    <option value="">Select a category</option>
+                                    {categories && categories.length > 0 && categories.map((category) => (
+                                        <option key={category.id} value={category.id}>
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Submit Button */}
+                            <motion.button
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                type="submit"
+                                className={`w-full ${areThereChanges ? "bg-[#002fff]" : "bg-[#80808085]"} text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-400 mt-4`}
                             >
-                                <option value="">Select a category</option>
-                                {categories.map((category) => (
-                                    <option key={category.id} value={category.id}>
-                                        {category.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                                Guardar Cambios
+                            </motion.button>
 
-                        {/* Submit Button */}
-                        <motion.button
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            type="submit"
-                            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 mt-4"
-                        >
-                            Save Product
-                        </motion.button>
+                            {/* <button className='bg-red-700 p-2 rounded-lg'
+                                onClick={() => console.log(formData)}>
+                                VerData
+                            </button> */}
+                        </form>
+                    </motion.div>
 
-                        <button className='bg-red-700 p-2 rounded-lg'
-                        onClick={() => console.log(formData)}>
-                            VerData
-                        </button>
-                    </form>
-                </motion.div>
-
-                <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-500">Apple-inspired design • Professional animations</p>
                 </div>
             </div>
         </div>

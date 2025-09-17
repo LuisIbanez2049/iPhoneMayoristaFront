@@ -3,9 +3,12 @@ import React, { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router'
 import { ChevronLeft, ChevronRight, X, Maximize2 } from "lucide-react"
 import HtmlToTailwind from '../components/HtmlToTailwind';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 function Product() {
 
+
+  const [isLoading, setIsLoading] = useState(false)
 
   // const productData = {
   //   id: 1,
@@ -56,13 +59,13 @@ function Product() {
 
       if (url.includes('youtu')) {
         return(
-          <iframe className={`w-full h-full object-contain ${isFullscreenView ? 'max-h-screen' : 'h-96'}`} src={url} frameborder="0"></iframe>
+          <iframe className={`w-full h-[100%] object-contain ${isFullscreenView ? 'max-h-screen' : 'h-96'}`} src={url} frameborder="0"></iframe>
         )
       } else {
         return (
         <video 
           ref={el => videoRefs.current[currentIndex] = el}
-          className={`w-full h-full object-contain ${isFullscreenView ? 'max-h-screen' : 'h-96'}`}
+          className={`w-full h-[100%] object-contain  ${isFullscreenView ? 'max-h-screen' : 'h-96'}`}
           controls
           playsInline
         >
@@ -77,7 +80,7 @@ function Product() {
         <img 
           src={url} 
           alt={`Product ${currentIndex + 1}`} 
-          className={`w-full h-full object-contain ${isFullscreenView ? 'max-h-screen' : 'h-96'}`}
+          className={`w-full h-[100%] object-contain ${isFullscreenView ? 'max-h-screen' : 'h-96'}`}
         />
       );
     }
@@ -93,18 +96,23 @@ function Product() {
   const [productData, setProductData] = useState({id: 0, name: "", stock: 0, price: 0, fileLinks: [""], category: "", categoryId: 0, description: ""})
 
   useEffect(() => {
+    setIsLoading(true)
     axios.get(`http://localhost:8080/api/product/${id}`)
       .then((response) => {
         console.log(response.data)
         setProductData(response.data)
+        setIsLoading(false)
       })
       .catch((error) => {
         console.log(error)
+        setIsLoading(false)
       })
 
   }, [])
   return (
     <div className="min-h-screen bg-white">
+
+      <LoadingSpinner isLoading={isLoading}/>
       {/* Fullscreen Modal */}
       {isFullscreen && (
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center" onClick={toggleFullscreen}>
@@ -140,9 +148,9 @@ function Product() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Carousel Section */}
-          <div className="lg:w-1/2 lg:h-[100vh] w-full lg:sticky lg:top-[20px]">
-            <div className="bg-gray-50 rounded-2xl p-4 shadow-sm">
-              <div className="relative bg-white rounded-xl overflow-hidden">
+          <div className="lg:w-1/2 lg:h-[100vh] w-full lg:sticky lg:top-[20px] ">
+            <div className="bg-gray-50 rounded-2xl p-4 shadow-sm ">
+              <div className="relative bg-white rounded-xl overflow-hidden ">
                 <div className="relative w-full lg:h-[600px] h-[350px]">
                   {renderMedia(productData.fileLinks[currentIndex])}
                   
