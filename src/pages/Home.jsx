@@ -1,9 +1,6 @@
 import React, { useState } from 'react'
 import CardFilter from '../components/CardFilter'
 import TrollFace from "../assets/trollFace.jpg"
-import ProductDescriptionBuilder from '../components/ProductDescriptionBuilder'
-import DragAndDropUploader from '../components/DragAndDropUploader'
-import DescriptionForm from '../components/DescriptionForm'
 import HtmlToTailwind from '../components/HtmlToTailwind'
 
 
@@ -54,7 +51,6 @@ function Home() {
         </div>
       </div>
 
-      {/* <ProductDescriptionBuilder />*/}
 
       <div className='w-full flex flex-col items-center border border-red-600'>
         <div className=' border border-blue-600 w-[95%]'>

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState, useRef } from 'react'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { ChevronLeft, ChevronRight, X, Maximize2 } from "lucide-react"
 import HtmlToTailwind from '../components/HtmlToTailwind';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -9,6 +9,8 @@ function Product() {
 
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const navigate = useNavigate();
 
   // const productData = {
   //   id: 1,
@@ -212,7 +214,11 @@ function Product() {
           
           {/* Product Info Section */}
           <div className="lg:w-1/2 w-full flex flex-col">
-            <div className="bg-white rounded-2xl p-6 shadow-sm sticky top-8 h-fit">
+            <div className=" bg-white rounded-2xl p-6 shadow-sm sticky top-8 h-fit border border-black">
+              <button className=' absolute right-5 bg-[#002fff] p-3 text-[white] font-semibold text-[20px] rounded-lg shadow-lg'
+              onClick={() => navigate(`/product/edit/${id}`)}>
+                EDITAR
+              </button>
               {/* Product Name */}
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                 {productData.name}

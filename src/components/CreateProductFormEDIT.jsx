@@ -1,0 +1,314 @@
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import LoadingSpinner from './LoadingSpinner';
+import MessageAlert from './MessageAlert';
+
+const CreateProductFormEDIT = ({ onActualizar, id }) => {
+
+    const [categories, setCategories] = useState([])
+    const [areThereChanges, setAreThereChanges] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [viewAlertMesaggeFromAPI,setViewAlertMesaggeFromAPI] = useState(false)
+    const [textMessageAlert, setTextMessageAlert] = useState("")
+    const [formData, setFormData] = useState({
+        name: '',
+        price: '',
+        stock: '',
+        categoryId: ''
+    });
+
+    const [fileLinks, setFileLinks] = useState([])
+    const [description, setDescription] = useState("")
+
+    const bodyForAPI = {
+        productId: id,
+        name: formData.name,
+        price: formData.price,
+        stock: formData.stock,
+        categoryId: formData.categoryId,
+        fileLinks: fileLinks,
+        description: description
+
+    }
+
+    // const categories = [
+    //     { id: '1', name: 'Electronics' },
+    //     { id: '2', name: 'Clothing' },
+    //     { id: '3', name: 'Home & Kitchen' },
+    //     { id: '4', name: 'Books' },
+    //     { id: '5', name: 'Sports' }
+    // ];
+
+    useEffect(() => {
+        axios.get("http://localhost:8080/api/category/")
+            .then((response) => {
+                console.log(response.data)
+                setCategories(response.data)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+
+    }, [])
+
+    useEffect(() => {
+        axios.get(`http://localhost:8080/api/product/${id}`)
+            .then((response) => {
+                console.log(response.data)
+                setFormData({
+                    name: response.data.name,
+                    price: `${response.data.price}`,
+                    stock: response.data.stock,
+                    categoryId: response.data.categoryId
+                })
+
+                setDescription(response.data.description)
+                setFileLinks(response.data.fileLinks)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+
+    }, [])
+
+    const formatPrice = (value) => {
+        if (!value) return '';
+
+        // Remover todos los caracteres excepto dígitos y punto
+        let numericValue = value.replace(/[^\d.]/g, '');
+
+        // Dividir la parte entera y decimal
+        let [integerPart, decimalPart] = numericValue.split('.');
+
+        // Limitar los decimales a 2 dígitos
+        if (decimalPart !== undefined) {
+            decimalPart = decimalPart.slice(0, 2);
+        }
+
+        // Formatear la parte entera con separador de miles
+        integerPart = new Intl.NumberFormat('en-US').format(integerPart);
+
+        // Unir parte entera y decimal
+        return decimalPart !== undefined ? `${integerPart}.${decimalPart}` : integerPart;
+    };
+
+    const handlePriceChange = (e) => {
+        const rawValue = e.target.value.replace(/[^\d.]/g, '');
+        setFormData({
+            ...formData,
+            price: rawValue ? formatPrice(rawValue) : ''
+        });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setAreThereChanges(true)
+        if (name === 'price') {
+            handlePriceChange(e);
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value
+            });
+        }
+    };
+
+    const actualizarProducto = () => {
+        setIsLoading(true)
+
+        const numericPrice = bodyForAPI.price ? parseFloat(bodyForAPI.price.replace(/,/g, '')) : 0;
+        const bodyForAPIModifyPrice = {
+            ...bodyForAPI,
+            price: numericPrice
+        };
+
+        console.log(bodyForAPIModifyPrice)
+
+        //const token = localStorage.getItem("userToken")
+        let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU4MjQ5NDg0LCJleHAiOjE3NTgyNTMwODR9.lwCknGGj6BJA0FEJqMlykOUP2PpyeLIVijQ89q7GxEs";
+        let tokenSinComillas = token.replace(/"/g, '');
+        console.log(tokenSinComillas)
+        // axios.get("http://localhost:8080/api/materias/availablesubjects", {
+        axios.post("http://localhost:8080/api/product/edit", bodyForAPIModifyPrice, {
+            headers: {
+                Authorization: `Bearer ${tokenSinComillas}`
+            }
+        })
+            .then((response) => {
+                console.log(response.data)
+                setIsLoading(false)
+                if (response.data.includes("Producto actualizado.")) {
+                    setViewAlertMesaggeFromAPI(true)
+                    setTextMessageAlert(response.data)
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+                setIsLoading(false)
+                setTextMessageAlert(error.response.data)
+                setViewAlertMesaggeFromAPI(true)
+            });
+
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Remove formatting for actual numeric value
+        setAreThereChanges(false)
+        console.log(formData)
+        const numericPrice = formData.price ? parseFloat(formData.price.replace(/,/g, '')) : 0;
+        const submitData = {
+            ...formData,
+            price: numericPrice
+        };
+        console.log('Form submitted:', submitData);
+        console.log(bodyForAPI)
+        // Here you would typically send the data to your API
+
+        //onActualizar(submitData)
+        actualizarProducto()
+    };
+
+
+    const handleOnClickAcceptAlertMessage = () => {
+            setViewAlertMesaggeFromAPI(false)
+            setTextMessageAlert("")
+    }
+
+    return (
+        <div className="min-h-screen flex items-center justify-center p-4 ">
+            <LoadingSpinner isLoading={isLoading} />
+            <MessageAlert view={viewAlertMesaggeFromAPI} onClickAccept={handleOnClickAcceptAlertMessage} text={textMessageAlert} />
+            <div className="lg:w-[950px] w-full flex flex-col items-center">
+                <div className='w-[90%]'>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="bg-white rounded-2xl border border-[#ccc] overflow-hidden"
+                    >
+                        <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-6">
+                            <h2 className="text-2xl font-bold text-white text-center">Características del producto</h2>
+                            <p className="text-gray-300 text-center mt-1">Agrega las características del producto abajo</p>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="p-8 space-y-6">
+                            {/* Name Field */}
+                            <div className="space-y-2">
+                                <label htmlFor="name" className="block text-sm font-semibold text-gray-700">
+                                    Name
+                                </label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
+                                    placeholder="Enter product name"
+                                    required
+                                />
+                            </div>
+
+                            {/* Price Field */}
+                            <div className="space-y-2">
+                                <label htmlFor="price" className="block text-sm font-semibold text-gray-700">
+                                    Price
+                                </label>
+                                <div className="relative">
+                                    <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                                    <input
+                                        type="text"
+                                        id="price"
+                                        name="price"
+                                        value={formData.price}
+                                        onChange={handleChange}
+                                        className="w-full pl-9 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
+                                        placeholder="0.00"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Stock Field */}
+                            <div className="space-y-2">
+                                <label htmlFor="stock" className="block text-sm font-semibold text-gray-700">
+                                    Stock
+                                </label>
+                                <input
+                                    type="number"
+                                    id="stock"
+                                    name="stock"
+                                    value={formData.stock}
+                                    onChange={handleChange}
+                                    min="0"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
+                                    placeholder="Enter available stock"
+                                    required
+                                />
+                            </div>
+
+                            {/* Category Field */}
+                            <div className="space-y-2">
+                                <label htmlFor="categoryId" className="block text-sm font-semibold text-gray-700">
+                                    Category
+                                </label>
+                                <select
+                                    id="categoryId"
+                                    name="categoryId"
+                                    value={formData.categoryId}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
+                                    required
+                                >
+                                    <option value="">Select a category</option>
+                                    {categories && categories.length > 0 && categories.map((category) => (
+                                        <option key={category.id} value={category.id}>
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Submit Button */}
+                            <motion.button
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                type="submit"
+                                className={`w-full ${areThereChanges ? "bg-[#002fff]" : "bg-[#80808085]"} text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-400 mt-4`}
+                            >
+                                Guardar Cambios
+                            </motion.button>
+
+                            {/* <button className='bg-red-700 p-2 rounded-lg'
+                                onClick={() => console.log(formData)}>
+                                VerData
+                            </button> */}
+                        </form>
+                    </motion.div>
+
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Framer Motion wrapper component
+const motion = {
+    div: ({ children, ...props }) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }) => <button {...props}>{children}</button>
+};
+
+// Add framer-motion functionality
+const createMotionComponent = (Component) => {
+    return ({ initial, animate, transition, ...props }) => {
+        // Simple animation implementation for environments without framer-motion
+        return <Component {...props} />;
+    };
+};
+
+// Create motion components
+motion.div = createMotionComponent('div');
+motion.button = createMotionComponent('button');
+
+export default CreateProductFormEDIT;
