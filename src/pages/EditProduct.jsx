@@ -6,6 +6,7 @@ import MessageAlert from '../components/MessageAlert'
 import { useNavigate, useParams } from 'react-router'
 import CreateProductFormEDIT from '../components/CreateProductFormEdit'
 import DescriptionFormEDIT from '../components/DescriptionFormEDIT'
+import DragAndDropUploaderEDIT from '../components/DragAndDropUploaderEDIT'
 
 function EditProduct() {
 
@@ -94,7 +95,7 @@ function EditProduct() {
             {/* <MessageAlert view={viewAlertMesaggeFromAPI} onClickAccept={handleOnClickAcceptAlertMessage} text={textMessageAlert} /> */}
 
             <CreateProductFormEDIT onActualizar={actualizarProductDataForm} id={id}/>
-            <DragAndDropUploader onActulizarArchivos={actualizarFileLinks} />
+            <DragAndDropUploaderEDIT id={id}/>
             <DescriptionFormEDIT id={id}/>
 
 

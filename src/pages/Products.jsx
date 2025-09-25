@@ -28,7 +28,7 @@ function Products() {
 
   useEffect(() => {
     setIsLoading(true)
-    axios.get("http://localhost:8080/api/product/")
+    axios.get("http://localhost:8080/api/product/minorista")
     .then((response) => {
       console.log(response.data)
       setProducts(response.data)

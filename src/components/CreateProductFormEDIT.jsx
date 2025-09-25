@@ -125,7 +125,7 @@ const CreateProductFormEDIT = ({ onActualizar, id }) => {
         console.log(bodyForAPIModifyPrice)
 
         //const token = localStorage.getItem("userToken")
-        let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU4MjQ5NDg0LCJleHAiOjE3NTgyNTMwODR9.lwCknGGj6BJA0FEJqMlykOUP2PpyeLIVijQ89q7GxEs";
+        let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU4NzY4MTMzLCJleHAiOjE3NTg3NzE3MzN9.fHyigIx6SgH3DarN2eB41Ys-mtOwuA7dTKWzC9TSAvI";
         let tokenSinComillas = token.replace(/"/g, '');
         console.log(tokenSinComillas)
         // axios.get("http://localhost:8080/api/materias/availablesubjects", {

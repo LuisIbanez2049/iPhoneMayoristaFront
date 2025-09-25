@@ -18,14 +18,14 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
   const [viewAlertMesaggeFromAPI, setViewAlertMesaggeFromAPI] = useState(false)
   const [textMessageAlert, setTextMessageAlert] = useState("")
 
-  const bodyForAPI = { 
+  const bodyForAPI = {
     productId: id,
     name: "",
     price: -1,
     stock: -1,
     categoryId: -1,
     fileLinks: [],
-    description: descriptionEnviar,  
+    description: descriptionEnviar,
   }
 
   const handleOnClickAcceptAlertMessage = () => {
@@ -36,24 +36,24 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
 
 
   useEffect(() => {
-        axios.get(`http://localhost:8080/api/product/${id}`)
-            .then((response) => {
-                console.log(response.data)
+    axios.get(`http://localhost:8080/api/product/${id}`)
+      .then((response) => {
+        console.log(response.data)
 
-                setDescription(response.data.description)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        setDescription(response.data.description)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
 
-    }, [])
+  }, [])
 
 
   const actualizarProducto = () => {
     setIsLoading(true)
-        console.log(bodyForAPI)
+    console.log(bodyForAPI)
     //const token = localStorage.getItem("userToken")
-    let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU4MjU0NzgwLCJleHAiOjE3NTgyNTgzODB9.t3qNCqPZhzNA50MngBZEVdpLMIt64HgWEXtzx0KJphw";
+    let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU4NzY5ODU4LCJleHAiOjE3NTg3NzM0NTh9.8yoadxUpt5g6ntjfE4kdHF9uM-DDduEOypd4AE1amH0";
     let tokenSinComillas = token.replace(/"/g, '');
     console.log(tokenSinComillas)
     // axios.get("http://localhost:8080/api/materias/availablesubjects", {
@@ -408,7 +408,10 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
   };
 
   return (
-    <div className="lg:w-[950px]  flex flex-col items-center m-auto">
+    <div className=" lg:w-[950px]  flex flex-col items-center m-auto">
+
+
+
 
       <LoadingSpinner isLoading={isLoading} />
       <MessageAlert view={viewAlertMesaggeFromAPI} onClickAccept={handleOnClickAcceptAlertMessage} text={textMessageAlert} />
@@ -803,7 +806,7 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
             });
           }}
         >
-          <p></p>
+          <p className={`${description ? "hidden" : "show"}`}>Escribe aquí el contenido...</p>
           <HtmlToTailwind html={description} />
 
         </div>
