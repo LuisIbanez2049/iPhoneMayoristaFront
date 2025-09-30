@@ -7,6 +7,7 @@ import Products from "./pages/Products";
 import Product from "./pages/Product";
 import CreateProduct from "./pages/CreateProduct";
 import EditProduct from "./pages/EditProduct";
+import CreateCategory from "./pages/CreateCategory";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -23,6 +24,7 @@ function App() {
             <Route path="/product/:id" element = {<Product/>}/>
             <Route path="/product/create" element = {<CreateProduct/>}/>
             <Route path="/product/edit/:id" element = {<EditProduct/>}/>
+            <Route path="/category/create" element= {<CreateCategory/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
