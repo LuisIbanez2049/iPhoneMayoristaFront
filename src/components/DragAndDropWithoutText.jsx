@@ -1,11 +1,19 @@
 import React, { useState, useRef, useCallback } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import axios from "axios";
+import LoadingSpinner from "./LoadingSpinner";
+import MessageAlert from "./MessageAlert";
 
 
 export default function DragAndDropWithoutText({ onActulizarArchivos }) {
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [viewAlertMesaggeFromAPI, setViewAlertMesaggeFromAPI] = useState(false)
+  const [textMessageAlert, setTextMessageAlert] = useState("")
+  const[viewBotonSubirArchivo, setViewBotonSubirArchivo] = useState(true)
+
 
   // Manejar drop de archivos
   const handleDrop = (e) => {
@@ -46,7 +54,7 @@ export default function DragAndDropWithoutText({ onActulizarArchivos }) {
   // Subir a Cloudinary en el orden actual
   const handleUpload = async () => {
     const urls = [];
-
+    setIsLoading(true)
     for (let f of files) {
       const formData = new FormData();
       formData.append("file", f.file);
@@ -61,6 +69,12 @@ export default function DragAndDropWithoutText({ onActulizarArchivos }) {
     }
 
     console.log("URLs finales en orden:", urls);
+    setIsLoading(false)
+    if (urls.length > 0) {
+      setViewAlertMesaggeFromAPI(true)
+      setTextMessageAlert("Imagen cargada con éxito.")
+    }
+    setViewBotonSubirArchivo(false)
     onActulizarArchivos(urls)
 
     // Aquí podrías enviar `urls` a tu API
@@ -70,9 +84,25 @@ export default function DragAndDropWithoutText({ onActulizarArchivos }) {
   const cloudName = "dlyoighih";
   const uploadPreset = "ml_defaultPrueba";
 
+  const handleOnClickAcceptAlertMessage = () => {
+
+    setViewAlertMesaggeFromAPI(false)
+    setTextMessageAlert("")
+    // if (textMessageAlert.includes("Producto creado exitosamente.")) {
+    //     setViewAlertMesaggeFromAPI(false)
+    //     setTextMessageAlert("")
+    //     navigate("/products")
+    // } else {
+    //     setViewAlertMesaggeFromAPI(false)
+    //     setTextMessageAlert("")
+    // }
+  }
+
 
   return (
     <div className=" w-full mx-auto flex flex-col items-center">
+      <LoadingSpinner isLoading={isLoading} />
+      <MessageAlert view={viewAlertMesaggeFromAPI} onClickAccept={handleOnClickAcceptAlertMessage} text={textMessageAlert} />
       <div className="">
 
         <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-2 rounded-t-2xl mb-[15px]">
@@ -147,22 +177,26 @@ export default function DragAndDropWithoutText({ onActulizarArchivos }) {
             )}
           </Droppable>
         </DragDropContext>
-        <div className={`${files.length > 0 ? "show" : "hidden"}  flex flex-col items-center mt-[20px]`}>
-          <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-            onClick={() => setFiles([])}>
-            Cancelar
-          </button>
-        </div>
+        <div className={`${viewBotonSubirArchivo ? "show" : "hidden"}`}>
+          <div className={`${files.length > 0 ? "show" : "hidden"}  flex flex-col items-center mt-[20px]`}>
+            <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+              onClick={() => setFiles([])}>
+              Cancelar
+            </button>
+          </div>
 
-        {/* Botón subir */}
-        {files.length > 0 && (
-          <button
-            onClick={handleUpload}
-            className="mt-6 w-full bg-[#002fff] text-white py-2 rounded-lg hover:bg-blue-700"
-          >
-            Subir archivos
-          </button>
-        )}
+          {/* Botón subir */}
+          {files.length > 0 && (
+            <div className="w-full flex flex-col items-center">
+              <button
+                onClick={handleUpload}
+                className="mt-6 w-[70%] mx-auto bg-[#002fff] text-white py-2 rounded-lg hover:bg-blue-700"
+              >
+                Subir archivos
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -52,8 +52,8 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
   const actualizarProducto = () => {
     setIsLoading(true)
     console.log(bodyForAPI)
-    //const token = localStorage.getItem("userToken")
-    let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU4NzY5ODU4LCJleHAiOjE3NTg3NzM0NTh9.8yoadxUpt5g6ntjfE4kdHF9uM-DDduEOypd4AE1amH0";
+    const token = localStorage.getItem("token")
+    console.log(token)
     let tokenSinComillas = token.replace(/"/g, '');
     console.log(tokenSinComillas)
     // axios.get("http://localhost:8080/api/materias/availablesubjects", {

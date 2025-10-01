@@ -52,7 +52,7 @@ function CreateCategory() {
         setIsLoading(true)
         //setViewLoadingComponent(true)
         //const token = localStorage.getItem("userToken")
-        let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU5MjA2OTM3LCJleHAiOjE3NTkyMTA1Mzd9.JsBaz3IpAyLVUpDp7FGlOGfFHFs03RealsqvBF6GdwA";
+        let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU5Mjg1NzQ4LCJleHAiOjE3NTkyODkzNDh9.OzgciizvypfNA1Hcf7nM1IyWfoPJpz5rubsAWgsYg5c";
         let tokenSinComillas = token.replace(/"/g, '');
         console.log(tokenSinComillas)
         // axios.get("http://localhost:8080/api/materias/availablesubjects", {
@@ -64,10 +64,10 @@ function CreateCategory() {
             .then((response) => {
                 console.log(response.data)
                 setIsLoading(false)
-                if (response.data.includes("Producto creado exitosamente.")) {
-                    setViewAlertMesaggeFromAPI(true)
-                    setTextMessageAlert(response.data)
-                }
+
+                setViewAlertMesaggeFromAPI(true)
+                setTextMessageAlert(response.data)
+
             })
             .catch((error) => {
                 console.log(error)
@@ -79,7 +79,7 @@ function CreateCategory() {
     }
 
     const handleOnClickAcceptAlertMessage = () => {
-        if (textMessageAlert.includes("Producto creado exitosamente.")) {
+        if (textMessageAlert.includes("Categoria creada con éxito.")) {
             setViewAlertMesaggeFromAPI(false)
             setTextMessageAlert("")
             navigate("/products")
@@ -101,7 +101,7 @@ function CreateCategory() {
                     {/* <p className="text-sm opacity-80">Agrega los detalles abajo</p> */}
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                <div className="p-6 space-y-4">
                     <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                         <input
@@ -140,7 +140,7 @@ function CreateCategory() {
                     >
                         Guardar Cambios
                     </button>
-                </form>
+                </div>
             </div>
         </div>
     )

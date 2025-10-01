@@ -8,6 +8,7 @@ import Product from "./pages/Product";
 import CreateProduct from "./pages/CreateProduct";
 import EditProduct from "./pages/EditProduct";
 import CreateCategory from "./pages/CreateCategory";
+import LoginForm from "./pages/LoginForm";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -25,6 +26,7 @@ function App() {
             <Route path="/product/create" element = {<CreateProduct/>}/>
             <Route path="/product/edit/:id" element = {<EditProduct/>}/>
             <Route path="/category/create" element= {<CreateCategory/>}/>
+            <Route path="/login" element= {<LoginForm/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
