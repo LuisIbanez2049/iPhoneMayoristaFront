@@ -1,18 +1,21 @@
 import React, { useRef, useState } from "react";
 import HtmlToTailwind from "./HtmlToTailwind";
+import MessageAlert from "./MessageAlert";
 
-const DescriptionForm = ({onActualizarDescripcion}) => {
+const DescriptionForm = ({ onActualizarDescripcion }) => {
   const editorRef = useRef(null);
   const [savedRange, setSavedRange] = useState(null);
   const [content, setContent] = useState("");
   const [areThereChanges, setAreThereChanges] = useState(false)
+  const [viewAlertMesaggeFromAPI, setViewAlertMesaggeFromAPI] = useState(false)
+  const [textMessageAlert, setTextMessageAlert] = useState("")
 
 
   //----------------------------------ESTADOS Y FUNCIONES PARA LOS FORMULARIOS DE IMAGEN Y VIDEO----------------------------------------------
   const [viewImageForm, setViewImageForm] = useState(false)
   const [viewVideForm, setViewVideoForm] = useState(false)
-   const [link, setLink] = useState("");
-   const [aspect, setAspect] = useState("16:9");
+  const [link, setLink] = useState("");
+  const [aspect, setAspect] = useState("16:9");
 
   const handleSubmitImage = (e) => {
     e.preventDefault();
@@ -47,7 +50,7 @@ const DescriptionForm = ({onActualizarDescripcion}) => {
   };
 
 
-    // Guardar la selección antes de perder el foco
+  // Guardar la selección antes de perder el foco
   const handleSelection = () => {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
@@ -71,24 +74,24 @@ const DescriptionForm = ({onActualizarDescripcion}) => {
 
   //--------------------------------TRANSFORMAR LINK DE YOUTUBE PARA PODER INCRUSTAR EN MI WEB---------
   function getEmbedUrl(url) {
-  let videoId;
+    let videoId;
 
-  // Si viene en formato "watch?v="
-  if (url.includes("watch?v=")) {
-    videoId = url.split("watch?v=")[1].split("&")[0];
-  } 
-  // Si viene en formato "youtu.be/"
-  else if (url.includes("youtu.be/")) {
-    videoId = url.split("youtu.be/")[1].split("?")[0];
+    // Si viene en formato "watch?v="
+    if (url.includes("watch?v=")) {
+      videoId = url.split("watch?v=")[1].split("&")[0];
+    }
+    // Si viene en formato "youtu.be/"
+    else if (url.includes("youtu.be/")) {
+      videoId = url.split("youtu.be/")[1].split("?")[0];
+    }
+
+    return `https://www.youtube.com/embed/${videoId}`;
   }
-
-  return `https://www.youtube.com/embed/${videoId}`;
-}
-//--------------------------------TRANSFORMAR LINK DE YOUTUBE PARA PODER INCRUSTAR EN MI WEB---------
+  //--------------------------------TRANSFORMAR LINK DE YOUTUBE PARA PODER INCRUSTAR EN MI WEB---------
 
 
 
-   // Guarda lo que el usuario editó
+  // Guarda lo que el usuario editó
   const handleSave = () => {
     if (editorRef.current) {
       setContent(editorRef.current.innerHTML);
@@ -112,97 +115,97 @@ const DescriptionForm = ({onActualizarDescripcion}) => {
 
   // Ejecutar comandos de formato
   const execCommand = (command, value = null) => {
-  if (["justifyLeft", "justifyCenter", "justifyRight"].includes(command)) {
+    if (["justifyLeft", "justifyCenter", "justifyRight"].includes(command)) {
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return;
+      const range = selection.getRangeAt(0);
+      let node = range.commonAncestorContainer;
+
+      // Si es texto, subimos al padre
+      if (node.nodeType === 3) node = node.parentNode;
+
+      // Subimos en la jerarquía hasta encontrar un <p>
+      while (node && node.nodeName !== "P") {
+        node = node.parentNode;
+      }
+
+      if (node && node.nodeName === "P") {
+        if (command === "justifyLeft")
+          replaceClass(node, /^text-(left|center|right)$/, "text-left");
+        if (command === "justifyCenter")
+          replaceClass(node, /^text-(left|center|right)$/, "text-center");
+        if (command === "justifyRight")
+          replaceClass(node, /^text-(left|center|right)$/, "text-right");
+      }
+      return; // evitamos que se ejecute el execCommand nativo
+    }
+
+    // Si no es un comando custom → usamos execCommand nativo
+    document.execCommand(command, false, value);
+    editorRef.current?.focus();
+  };
+
+
+
+  //------------------------------------------------FUNCION PARA EDITAR EL TEXTO CON ESTILOS EN TAILWIND (ALTERNATIVA)---NO ESTA EN USO--------
+  const addFormat = (format) => {
     const selection = window.getSelection();
     if (!selection.rangeCount) return;
+
     const range = selection.getRangeAt(0);
     let node = range.commonAncestorContainer;
 
-    // Si es texto, subimos al padre
-    if (node.nodeType === 3) node = node.parentNode;
-
-    // Subimos en la jerarquía hasta encontrar un <p>
-    while (node && node.nodeName !== "P") {
+    // Si es nodo de texto, subir al padre
+    if (node.nodeType === 3) {
       node = node.parentNode;
     }
 
-    if (node && node.nodeName === "P") {
-      if (command === "justifyLeft")
-        replaceClass(node, /^text-(left|center|right)$/, "text-left");
-      if (command === "justifyCenter")
-        replaceClass(node, /^text-(left|center|right)$/, "text-center");
-      if (command === "justifyRight")
-        replaceClass(node, /^text-(left|center|right)$/, "text-right");
-    }
-    return; // evitamos que se ejecute el execCommand nativo
-  }
+    if (!node) return;
 
-  // Si no es un comando custom → usamos execCommand nativo
-  document.execCommand(command, false, value);
-  editorRef.current?.focus();
-};
+    let classList = node.getAttribute("class");
+    let classes = classList ? classList.split(/\s+/).filter(Boolean) : [];
 
+    // Grupos exclusivos
+    const alignClasses = ["text-left", "text-center", "text-right"];
+    const sizeClasses = ["text-[16px]", "text-[19px]", "text-[22px]"];
 
-
-//------------------------------------------------FUNCION PARA EDITAR EL TEXTO CON ESTILOS EN TAILWIND (ALTERNATIVA)---NO ESTA EN USO--------
-  const addFormat = (format) => {
-  const selection = window.getSelection();
-  if (!selection.rangeCount) return;
-  
-  const range = selection.getRangeAt(0);
-  let node = range.commonAncestorContainer;
-
-  // Si es nodo de texto, subir al padre
-  if (node.nodeType === 3) {
-    node = node.parentNode;
-  }
-
-  if (!node) return;
-
-  let classList = node.getAttribute("class");
-  let classes = classList ? classList.split(/\s+/).filter(Boolean) : [];
-
-  // Grupos exclusivos
-  const alignClasses = ["text-left", "text-center", "text-right"];
-  const sizeClasses = ["text-[16px]", "text-[19px]", "text-[22px]"];
-
-  if (alignClasses.includes(format)) {
-    // === Caso Alineación ===
-    if (classes.includes(format)) {
-      // Si ya tiene la misma → eliminar
-      classes = classes.filter(cls => cls !== format);
+    if (alignClasses.includes(format)) {
+      // === Caso Alineación ===
+      if (classes.includes(format)) {
+        // Si ya tiene la misma → eliminar
+        classes = classes.filter(cls => cls !== format);
+      } else {
+        // Reemplazar cualquier otra de alineación
+        classes = classes.filter(cls => !alignClasses.includes(cls));
+        classes.push(format);
+      }
+    } else if (sizeClasses.includes(format)) {
+      // === Caso Tamaño ===
+      if (classes.includes(format)) {
+        // Si ya tiene ese tamaño exacto → no hacer nada
+        return;
+      } else {
+        // Reemplazar cualquier otro tamaño de este grupo
+        classes = classes.filter(cls => !sizeClasses.includes(cls));
+        classes.push(format);
+      }
     } else {
-      // Reemplazar cualquier otra de alineación
-      classes = classes.filter(cls => !alignClasses.includes(cls));
-      classes.push(format);
+      // === Caso general === (toggle normal)
+      if (classes.includes(format)) {
+        classes = classes.filter(cls => cls !== format);
+      } else {
+        classes.push(format);
+      }
     }
-  } else if (sizeClasses.includes(format)) {
-    // === Caso Tamaño ===
-    if (classes.includes(format)) {
-      // Si ya tiene ese tamaño exacto → no hacer nada
-      return;
-    } else {
-      // Reemplazar cualquier otro tamaño de este grupo
-      classes = classes.filter(cls => !sizeClasses.includes(cls));
-      classes.push(format);
-    }
-  } else {
-    // === Caso general === (toggle normal)
-    if (classes.includes(format)) {
-      classes = classes.filter(cls => cls !== format);
-    } else {
-      classes.push(format);
-    }
-  }
 
-  // Actualizar el atributo class
-  if (classes.length > 0) {
-    node.setAttribute("class", classes.join(" "));
-  } else {
-    node.removeAttribute("class");
-  }
-};
-//------------------------------------------------FUNCION PARA EDITAR EL TEXTO CON ESTILOS EN TAILWIND (ALTERNATIVA)---NO ESTA EN USO--------
+    // Actualizar el atributo class
+    if (classes.length > 0) {
+      node.setAttribute("class", classes.join(" "));
+    } else {
+      node.removeAttribute("class");
+    }
+  };
+  //------------------------------------------------FUNCION PARA EDITAR EL TEXTO CON ESTILOS EN TAILWIND (ALTERNATIVA)---NO ESTA EN USO--------
 
 
 
@@ -212,7 +215,7 @@ const DescriptionForm = ({onActualizarDescripcion}) => {
     const selection = window.getSelection();
     if (!selection.rangeCount) return;
 
-    
+
     const range = selection.getRangeAt(0);
     let node = range.commonAncestorContainer;
     // Si es nodo de texto, subir al padre
@@ -258,32 +261,32 @@ const DescriptionForm = ({onActualizarDescripcion}) => {
 
   // función auxiliar para redimensionar iframes manteniendo relación 16:9
   // función auxiliar para redimensionar iframes detectando su aspecto automáticamente
-const resizeIframe = (iframe, increase) => {
-  let className = iframe.className;
+  const resizeIframe = (iframe, increase) => {
+    let className = iframe.className;
 
-  const widthRegex = /w-\[(\d+)px\]/;
-  const heightRegex = /h-\[(\d+)px\]/;
+    const widthRegex = /w-\[(\d+)px\]/;
+    const heightRegex = /h-\[(\d+)px\]/;
 
-  let newClass = className;
+    let newClass = className;
 
-  if (widthRegex.test(className) && heightRegex.test(className)) {
-    const currentW = parseInt(className.match(widthRegex)[1]); // ancho px
-    const currentH = parseInt(className.match(heightRegex)[1]); // alto px
+    if (widthRegex.test(className) && heightRegex.test(className)) {
+      const currentW = parseInt(className.match(widthRegex)[1]); // ancho px
+      const currentH = parseInt(className.match(heightRegex)[1]); // alto px
 
-    // Detectar relación de aspecto original
-    const ratio = currentW / currentH; // ej: 16/9 ≈ 1.78, 9/16 ≈ 0.56
+      // Detectar relación de aspecto original
+      const ratio = currentW / currentH; // ej: 16/9 ≈ 1.78, 9/16 ≈ 0.56
 
-    const newW = increase ? currentW + 30 : Math.max(100, currentW - 30);
-    const newH = Math.round(newW / ratio);
+      const newW = increase ? currentW + 30 : Math.max(100, currentW - 30);
+      const newH = Math.round(newW / ratio);
 
-    // actualizar ancho y alto en la clase
-    newClass = newClass.replace(widthRegex, `w-[${newW}px]`);
-    newClass = newClass.replace(heightRegex, `h-[${newH}px]`);
-  }
+      // actualizar ancho y alto en la clase
+      newClass = newClass.replace(widthRegex, `w-[${newW}px]`);
+      newClass = newClass.replace(heightRegex, `h-[${newH}px]`);
+    }
 
-  iframe.className = newClass;
-};
- 
+    iframe.className = newClass;
+  };
+
 
 
 
@@ -301,7 +304,7 @@ const resizeIframe = (iframe, increase) => {
 
       // Actualizar ancho y alto en la clase
       newClass = newClass.replace(widthRegex, `w-[${newW}px]`);
-      
+
     }
 
     img.className = newClass;
@@ -310,7 +313,7 @@ const resizeIframe = (iframe, increase) => {
   // Insertar imagen o video
   const insertMedia = (type) => {
     if (type === "image") {
-      
+
       if (link) {
         console.log("Entra en el exCommand?")
         execCommand(
@@ -334,8 +337,8 @@ const resizeIframe = (iframe, increase) => {
         }
         if (aspect == "16:9") {
           execCommand(
-          "insertHTML",
-          `
+            "insertHTML",
+            `
             <p style="text-align: center;">
               <iframe
                 class="sm:w-[560px]  sm:h-[315px] w-full h-[160px] rounded-lg m-auto"
@@ -346,13 +349,13 @@ const resizeIframe = (iframe, increase) => {
               </iframe>
             </p>
           `
-        );
-        setViewVideoForm(false)
-        setLink("")
+          );
+          setViewVideoForm(false)
+          setLink("")
         } else {
           execCommand(
-          "insertHTML",
-          `
+            "insertHTML",
+            `
             <p style="text-align: center;">
               <iframe
                 class="sm:w-[315px]  sm:h-[560px] w-full h-[520px] rounded-lg m-auto"
@@ -363,10 +366,10 @@ const resizeIframe = (iframe, increase) => {
               </iframe>
             </p>
           `
-        );
-        setAspect("16:9")
-        setViewVideoForm(false)
-        setLink("")
+          );
+          setAspect("16:9")
+          setViewVideoForm(false)
+          setLink("")
         }
       }
     }
@@ -383,6 +386,8 @@ const resizeIframe = (iframe, increase) => {
       console.log(html)
       onActualizarDescripcion('' + html)
     });
+    setTextMessageAlert("Cambios guardados exitosamente.")
+    setViewAlertMesaggeFromAPI(true)
   };
 
   // Limpiar formato
@@ -390,8 +395,18 @@ const resizeIframe = (iframe, increase) => {
     execCommand("removeFormat");
   };
 
+
+  const handleOnClickAcceptAlertMessage = () => {
+
+    setViewAlertMesaggeFromAPI(false)
+    setTextMessageAlert("")
+
+  }
+
   return (
     <div className="lg:w-[950px]  flex flex-col items-center m-auto">
+
+      <MessageAlert view={viewAlertMesaggeFromAPI} onClickAccept={handleOnClickAcceptAlertMessage} text={textMessageAlert} />
 
 
       {/* -------------------------------------------------------FORMULARIO IMAGEN/VIDEO------------------------------------------------------- */}
@@ -557,7 +572,7 @@ const resizeIframe = (iframe, increase) => {
         </div>
       </div>
       {/* -------------------------------------------------------FORMULARIO IMAGEN/VIDEO------------------------------------------------------- */}
-      
+
 
       <div
         className="w-[90%]"
@@ -644,7 +659,7 @@ const resizeIframe = (iframe, increase) => {
 
 
 
-            
+
             <button type="button" onClick={() => execCommand("justifyLeft")}>
               <svg
                 className="w-[24px] h-[24px]"
@@ -784,11 +799,11 @@ const resizeIframe = (iframe, increase) => {
           }}
         >
           <p >Escribe aquí tu contenido...</p>
-          <HtmlToTailwind html={''} />
+          {/* <HtmlToTailwind html={'<p>Escribe aquí tu contenido...</p>'} /> */}
 
         </div>
 
-        
+
 
         {/* Vista previa del HTML (opcional) */}
         {/* <div

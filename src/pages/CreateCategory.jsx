@@ -6,6 +6,9 @@ import axios from 'axios';
 
 function CreateCategory() {
 
+    const baseUrl = "http://localhost:8080"
+
+
     const [image, setImage] = useState([""])
     const [name, setName] = useState("")
     const [categoryTipe, setCategoryTipe] = useState("")
@@ -50,13 +53,11 @@ function CreateCategory() {
             image: img
         }
         setIsLoading(true)
-        //setViewLoadingComponent(true)
-        //const token = localStorage.getItem("userToken")
-        let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU5Mjg1NzQ4LCJleHAiOjE3NTkyODkzNDh9.OzgciizvypfNA1Hcf7nM1IyWfoPJpz5rubsAWgsYg5c";
+        const token = localStorage.getItem("token")
         let tokenSinComillas = token.replace(/"/g, '');
-        console.log(tokenSinComillas)
+        //console.log(tokenSinComillas)
         // axios.get("http://localhost:8080/api/materias/availablesubjects", {
-        axios.post("http://localhost:8080/api/category/create", bodyForAPI, {
+        axios.post(`${baseUrl}/api/category/create`, bodyForAPI, {
             headers: {
                 Authorization: `Bearer ${tokenSinComillas}`
             }

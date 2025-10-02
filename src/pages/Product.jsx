@@ -7,6 +7,9 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 function Product() {
 
+  const baseUrl = "http://localhost:8080"
+  const isToken = localStorage.getItem("token") 
+
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -99,7 +102,7 @@ function Product() {
 
   useEffect(() => {
     setIsLoading(true)
-    axios.get(`http://localhost:8080/api/product/${id}`)
+    axios.get(`${baseUrl}/api/product/${id}`)
       .then((response) => {
         console.log(response.data)
         setProductData(response.data)
@@ -215,10 +218,12 @@ function Product() {
           {/* Product Info Section */}
           <div className="lg:w-1/2 w-full flex flex-col">
             <div className=" bg-white rounded-2xl p-6 shadow-sm sticky top-8 h-fit border border-black">
-              <button className=' absolute right-5 bg-[#002fff] p-3 text-[white] font-semibold text-[20px] rounded-lg shadow-lg'
+
+              <button className={`${isToken ? "show" : "hidden"} absolute right-5 bg-[#002fff] p-3 text-[white] font-semibold text-[20px] rounded-lg shadow-lg`}
               onClick={() => navigate(`/product/edit/${id}`)}>
                 EDITAR
               </button>
+
               {/* Product Name */}
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                 {productData.name}

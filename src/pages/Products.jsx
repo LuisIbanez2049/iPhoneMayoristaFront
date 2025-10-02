@@ -6,6 +6,9 @@ import LoadingSpinner from '../components/LoadingSpinner'
 
 function Products() {
 
+  const baseUrl = "http://localhost:8080"
+
+
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [categoryId, setCategoryId] = useState(0)
@@ -15,7 +18,7 @@ function Products() {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/category/")
+    axios.get(`${baseUrl}/api/category/`)
     .then((response) => {
       console.log(response.data)
       setCategorias(response.data)
@@ -28,7 +31,7 @@ function Products() {
 
   useEffect(() => {
     setIsLoading(true)
-    axios.get("http://localhost:8080/api/product/minorista")
+    axios.get(`${baseUrl}/api/product/minorista`)
     .then((response) => {
       console.log(response.data)
       setProducts(response.data)

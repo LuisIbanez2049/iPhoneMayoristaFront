@@ -10,6 +10,9 @@ import DragAndDropUploaderEDIT from '../components/DragAndDropUploaderEDIT'
 
 function EditProduct() {
 
+    const baseUrl = "http://localhost:8080"
+
+
     const [productDataForm, setProductDataForm] = useState({ name: '', price: '', stock: '', categoryId: '' })
     const [fileLinks, setFileLinks] = useState([])
     const [description, setDescription] = useState("")
@@ -60,12 +63,11 @@ function EditProduct() {
 
     const createProduct = () => {
         setIsLoading(true)
-        const user = localStorage.getItem("user")
-        //let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU4MDgxMTg4LCJleHAiOjE3NTgwODQ3ODh9.JMjg7pAZfiF8046brc1_7t_x7dZCsMShOiXSaXiaj3Q";
-        let tokenSinComillas = user.token.replace(/"/g, '');
-        console.log(tokenSinComillas)
+        const token = localStorage.getItem("token")
+        let tokenSinComillas = token.replace(/"/g, '');
+        //console.log(tokenSinComillas)
         // axios.get("http://localhost:8080/api/materias/availablesubjects", {
-        axios.post("http://localhost:8080/api/product/create", bodyForAPI, {
+        axios.post(`${baseUrl}/api/product/create`, bodyForAPI, {
             headers: {
                 Authorization: `Bearer ${tokenSinComillas}`
             }

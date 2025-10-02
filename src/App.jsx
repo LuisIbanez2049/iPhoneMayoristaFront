@@ -26,7 +26,7 @@ function App() {
             <Route path="/product/create" element = {<CreateProduct/>}/>
             <Route path="/product/edit/:id" element = {<EditProduct/>}/>
             <Route path="/category/create" element= {<CreateCategory/>}/>
-            <Route path="/login" element= {<LoginForm/>}/>
+            <Route path="/:login" element= {<LoginForm/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

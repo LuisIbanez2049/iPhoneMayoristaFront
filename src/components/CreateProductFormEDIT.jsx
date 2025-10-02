@@ -5,6 +5,8 @@ import MessageAlert from './MessageAlert';
 
 const CreateProductFormEDIT = ({ onActualizar, id }) => {
 
+    const baseUrl = "http://localhost:8080"
+
     const [categories, setCategories] = useState([])
     const [areThereChanges, setAreThereChanges] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -40,7 +42,7 @@ const CreateProductFormEDIT = ({ onActualizar, id }) => {
     // ];
 
     useEffect(() => {
-        axios.get("http://localhost:8080/api/category/")
+        axios.get(`${baseUrl}/api/category/`)
             .then((response) => {
                 console.log(response.data)
                 setCategories(response.data)
@@ -52,7 +54,7 @@ const CreateProductFormEDIT = ({ onActualizar, id }) => {
     }, [])
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/product/${id}`)
+        axios.get(`${baseUrl}/api/product/${id}`)
             .then((response) => {
                 console.log(response.data)
                 setFormData({
@@ -124,12 +126,11 @@ const CreateProductFormEDIT = ({ onActualizar, id }) => {
 
         console.log(bodyForAPIModifyPrice)
 
-        //const token = localStorage.getItem("userToken")
-        let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU4NzY4MTMzLCJleHAiOjE3NTg3NzE3MzN9.fHyigIx6SgH3DarN2eB41Ys-mtOwuA7dTKWzC9TSAvI";
+        const token = localStorage.getItem("token")
         let tokenSinComillas = token.replace(/"/g, '');
-        console.log(tokenSinComillas)
+        //console.log(tokenSinComillas)
         // axios.get("http://localhost:8080/api/materias/availablesubjects", {
-        axios.post("http://localhost:8080/api/product/edit", bodyForAPIModifyPrice, {
+        axios.post(`${baseUrl}/api/product/edit`, bodyForAPIModifyPrice, {
             headers: {
                 Authorization: `Bearer ${tokenSinComillas}`
             }

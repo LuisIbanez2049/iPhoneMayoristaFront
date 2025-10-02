@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import BackGround from "../assets/bgnano.png"
 import BGround from "../assets/bground.jpg"
+import BGroundV from "../assets/bgroundV.jpg"
 import LoadingSpinner from '../components/LoadingSpinner';
 import axios from 'axios';
+import MessageAlert from '../components/MessageAlert';
+import { useNavigate } from 'react-router';
 
 
 
@@ -15,10 +18,43 @@ import axios from 'axios';
 
 export default function LoginForm() {
 
+  const baseUrl = "http://localhost:8080"
+
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [isLoading, setIsLoading] = useState(false)
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 430);
+    const [viewAlertMesaggeFromAPI, setViewAlertMesaggeFromAPI] = useState(false)
+    const [textMessageAlert, setTextMessageAlert] = useState("")
+
+    const navigate = useNavigate();
+
+
+    
+     
+//--------------------------------------------VERIFICAR ANCHO DE LA PANTALLA--------------------------------------------
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 430) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+
+    // Ejecuta una vez al montar
+    handleResize();
+
+    // Agrega el listener
+    window.addEventListener("resize", handleResize);
+
+    // Limpia el listener al desmontar
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+//--------------------------------------------VERIFICAR ANCHO DE LA PANTALLA--------------------------------------------
+
+
 
     const handleSubmit = () => {
         console.log(email + " - " + password)
@@ -29,35 +65,52 @@ export default function LoginForm() {
         }
         setIsLoading(true)
         // axios.get("http://localhost:8080/api/materias/availablesubjects", {
-        axios.post("http://localhost:8080/api/auth/login", bodyForAPI)
+        axios.post(`${baseUrl}/api/auth/login`, bodyForAPI)
             .then((response) => {
                 console.log(response.data)
-                let token = localStorage.setItem("token", JSON.stringify(response.data))
+                localStorage.setItem("token", JSON.stringify(response.data))
                 setIsLoading(false)
+                navigate("/products")
+                location.reload()
             })
             .catch((error) => {
                 console.log(error)
                 setIsLoading(false)
+                setTextMessageAlert(error.response.data)
+                setViewAlertMesaggeFromAPI(true)
 
             });
 
     }
 
+      const handleOnClickAcceptAlertMessage = () => {
+    setViewAlertMesaggeFromAPI(false)
+    setTextMessageAlert("")
+  }
 
 
   return (
-    <div className="glass-root breathing-bg"
-    style={{
-      backgroundImage: `url(${BGround})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-    }}>
-        <LoadingSpinner isLoading={isLoading} />
+    <div
+      className={`glass-root ${isMobile ? "breathingV-bg" : "breathing-bg"} h-[100vh]`}
+      style={{
+        backgroundImage: `url(${isMobile ? BGroundV : BGround})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <LoadingSpinner isLoading={isLoading} />
+      <MessageAlert view={viewAlertMesaggeFromAPI} onClickAccept={handleOnClickAcceptAlertMessage} text={textMessageAlert} />
       {/* SVG Filter (should be included once in your document) */}
       <svg width="0" height="0" style={{ position: "absolute" }}>
         <defs>
-          <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
+          <filter
+            id="glass-distortion"
+            x="0%"
+            y="0%"
+            width="100%"
+            height="100%"
+          >
             <feTurbulence
               type="fractalNoise"
               baseFrequency="0.013 0.013"
@@ -78,21 +131,32 @@ export default function LoginForm() {
       </svg>
 
       {/* Liquid Glass Login Card */}
-      <div className="liquid-glass-card">
+      <div className="liquid-glass-card w-[95%] lg:w-[600px] lg:h-[400px]">
         <div className="card-content ">
           <h2>Sign In</h2>
           <form className="form" onSubmit={(e) => e.preventDefault()}>
-            <input type="email" placeholder="Email" className="input" onChange={(e) => setEmail(e.target.value)}/>
-            <input type="password" placeholder="Password" className="input" onChange={(e) => setPassword(e.target.value)}/>
-            <button className="glass-button" onClick={handleSubmit}>Login</button>
+            <input
+              type="email"
+              placeholder="Email"
+              className="input"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className="input"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button className="glass-button" onClick={handleSubmit}>
+              Login
+            </button>
           </form>
-          <div className="forgot">Forgot Password?</div>
+          {/* <div className="forgot">Forgot Password?</div> */}
         </div>
       </div>
 
       <style>{`
         .glass-root{
-          min-height: 100vh;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -102,8 +166,6 @@ export default function LoginForm() {
 
         .liquid-glass-card {
           position: relative;
-          width: 600px;
-          height: 400px;
           border-radius: 28px;
           isolation: isolate;
           box-shadow: 0px 6px 22px -11px rgba(199, 199, 199, 0.2);
@@ -195,26 +257,50 @@ export default function LoginForm() {
         }
 
 
-        .breathing-bg {
-  animation: breathingBackground 6s ease-in-out infinite;
-}
 
-@keyframes breathingBackground {
-  0% {
-    background-size: 100%;
-  }
-  50% {
-    background-size: 110%; /* La imagen crece un poco */
-  }
-  100% {
-    background-size: 100%;
-  }
-}
+        .breathing-bg {
+          animation: breathingBackground 6s ease-in-out infinite;
+        }
+
+        @keyframes breathingBackground {
+         0% {
+              background-size: 120%;
+            }
+         50% {
+              background-size: 130%; /* La imagen crece un poco */
+            }
+         100% {
+                background-size: 120%;
+              }
+        }
+
+
+
+        .breathingV-bg {
+          animation: breathingBackgroundV 6s ease-in-out infinite;
+        }
+
+        @keyframes breathingBackgroundV {
+          0% {
+              background-size: 175%;
+            }
+          50% {
+              background-size: 180%; /* La imagen crece un poco */
+            }
+          100% {
+            background-size: 175%;
+          }
+        }
+
+
+
   
       `}</style>
     </div>
   );
 }
+
+
 
 
 

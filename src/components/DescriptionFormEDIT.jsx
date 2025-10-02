@@ -5,6 +5,10 @@ import axios from "axios";
 import MessageAlert from "./MessageAlert";
 
 const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
+
+  const baseUrl = "http://localhost:8080"
+
+
   const editorRef = useRef(null);
   const [savedRange, setSavedRange] = useState(null);
   const [content, setContent] = useState("");
@@ -36,7 +40,7 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/product/${id}`)
+    axios.get(`${baseUrl}/api/product/${id}`)
       .then((response) => {
         console.log(response.data)
 
@@ -53,11 +57,11 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
     setIsLoading(true)
     console.log(bodyForAPI)
     const token = localStorage.getItem("token")
-    console.log(token)
+    //console.log(token)
     let tokenSinComillas = token.replace(/"/g, '');
-    console.log(tokenSinComillas)
+    //console.log(tokenSinComillas)
     // axios.get("http://localhost:8080/api/materias/availablesubjects", {
-    axios.post("http://localhost:8080/api/product/edit", bodyForAPI, {
+    axios.post(`${baseUrl}/api/product/edit`, bodyForAPI, {
       headers: {
         Authorization: `Bearer ${tokenSinComillas}`
       }

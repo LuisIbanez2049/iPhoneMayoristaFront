@@ -6,6 +6,11 @@ import MessageAlert from "./MessageAlert";
 
 
 export default function DragAndDropUploaderEDIT({ onActulizarArchivos, id }) {
+
+  const baseUrl = "http://localhost:8080"
+
+
+
   const [files, setFiles] = useState([]);
   const [filesFromBack, setFilesFromBack] = useState([])
   const [viewAddFilesFrom, setViewAddFilesFrom] = useState(false)
@@ -51,7 +56,7 @@ export default function DragAndDropUploaderEDIT({ onActulizarArchivos, id }) {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/product/${id}`)
+    axios.get(`${baseUrl}/api/product/${id}`)
       .then((response) => {
         console.log(response.data)
 
@@ -152,12 +157,11 @@ export default function DragAndDropUploaderEDIT({ onActulizarArchivos, id }) {
     }
 
     console.log(bodyForAPI)
-    //const token = localStorage.getItem("userToken")
-    let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU4NzY4MTMzLCJleHAiOjE3NTg3NzE3MzN9.fHyigIx6SgH3DarN2eB41Ys-mtOwuA7dTKWzC9TSAvI";
+    const token = localStorage.getItem("token")
     let tokenSinComillas = token.replace(/"/g, '');
     console.log(tokenSinComillas)
     // axios.get("http://localhost:8080/api/materias/availablesubjects", {
-    axios.post("http://localhost:8080/api/product/edit", bodyForAPI, {
+    axios.post(`${baseUrl}/api/product/edit`, bodyForAPI, {
       headers: {
         Authorization: `Bearer ${tokenSinComillas}`
       }

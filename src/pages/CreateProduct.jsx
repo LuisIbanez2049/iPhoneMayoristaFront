@@ -9,13 +9,14 @@ import { useNavigate } from 'react-router'
 
 function CreateProduct() {
 
+    const baseUrl = "http://localhost:8080"
+
     const [productDataForm, setProductDataForm] = useState({ name: '', price: '', stock: '', categoryId: '' })
     const [fileLinks, setFileLinks] = useState([])
     const [description, setDescription] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [viewAlertMesaggeFromAPI, setViewAlertMesaggeFromAPI] = useState(false)
     const [textMessageAlert, setTextMessageAlert] = useState("")
-    const [linkRouteMessageAlert, setLinkRouteMessageAlert] = useState("")
 
     const navigate = useNavigate();
 
@@ -50,7 +51,7 @@ function CreateProduct() {
         price: productDataForm.price,
         stock: productDataForm.stock,
         categoryId: productDataForm.categoryId,
-        fileLinks: [""],
+        fileLinks: fileLinks,
         description: description
 
     }
@@ -59,12 +60,11 @@ function CreateProduct() {
     const createProduct = () => {
         setIsLoading(true)
         //setViewLoadingComponent(true)
-        //const token = localStorage.getItem("userToken")
-        let token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX0NMSUVOVCIsInN1YiI6Imx1aXNAZ21haWwuY29tIiwiaWF0IjoxNzU4MjU0NzgwLCJleHAiOjE3NTgyNTgzODB9.t3qNCqPZhzNA50MngBZEVdpLMIt64HgWEXtzx0KJphw";
+        const token = localStorage.getItem("token")
         let tokenSinComillas = token.replace(/"/g, '');
-        console.log(tokenSinComillas)
+        //console.log(tokenSinComillas)
         // axios.get("http://localhost:8080/api/materias/availablesubjects", {
-        axios.post("http://localhost:8080/api/product/create", bodyForAPI, {
+        axios.post(`${baseUrl}/api/product/create`, bodyForAPI, {
             headers: {
                 Authorization: `Bearer ${tokenSinComillas}`
             }

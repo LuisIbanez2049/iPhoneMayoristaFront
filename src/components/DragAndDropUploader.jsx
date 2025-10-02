@@ -1,11 +1,16 @@
 import React, { useState, useRef, useCallback } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import axios from "axios";
+import LoadingSpinner from "./LoadingSpinner";
+import MessageAlert from "./MessageAlert";
 
 
 export default function DragAndDropUploader({ onActulizarArchivos }) {
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false)
+  const [viewAlertMesaggeFromAPI, setViewAlertMesaggeFromAPI] = useState(false)
+  const [textMessageAlert, setTextMessageAlert] = useState("")
 
   // Manejar drop de archivos
   const handleDrop = (e) => {
@@ -46,6 +51,7 @@ export default function DragAndDropUploader({ onActulizarArchivos }) {
   // Subir a Cloudinary en el orden actual
   const handleUpload = async () => {
     const urls = [];
+    setIsLoading(true)
 
     for (let f of files) {
       const formData = new FormData();
@@ -59,7 +65,9 @@ export default function DragAndDropUploader({ onActulizarArchivos }) {
 
       urls.push(res.data.secure_url);
     }
-
+    setIsLoading(false)
+    setTextMessageAlert("Archivos guardados exitosamente.")
+    setViewAlertMesaggeFromAPI(true)
     console.log("URLs finales en orden:", urls);
     onActulizarArchivos(urls)
 
@@ -71,8 +79,20 @@ export default function DragAndDropUploader({ onActulizarArchivos }) {
   const uploadPreset = "ml_defaultPrueba";
 
 
+  const handleOnClickAcceptAlertMessage = () => {
+
+    setViewAlertMesaggeFromAPI(false)
+    setTextMessageAlert("")
+
+  }
+
+
   return (
     <div className="lg:w-[950px] w-full mx-auto flex flex-col items-center">
+
+      <LoadingSpinner isLoading={isLoading} />
+      <MessageAlert view={viewAlertMesaggeFromAPI} onClickAccept={handleOnClickAcceptAlertMessage} text={textMessageAlert} />
+
       <div className="w-[90%]">
 
         <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-6 rounded-t-2xl mb-[15px]">

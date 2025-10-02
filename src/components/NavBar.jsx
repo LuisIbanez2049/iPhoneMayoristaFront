@@ -1,7 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function NavBar() {
+
+  const navigate = useNavigate();
   return (
     <div className=' flex flex-row justify-center gap-4 p-2'>
         <Link to="/">
@@ -27,6 +29,14 @@ function NavBar() {
         <Link>
          <p className='text-[15px]'>Watch</p>
         </Link>
+
+        <button onClick={() => {
+          navigate("/login")
+          localStorage.clear()
+          location.reload()
+        }}>
+          <i className="fa-solid fa-right-from-bracket"></i>
+        </button>
         
     </div>
   )

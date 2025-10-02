@@ -1,7 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import MessageAlert from './MessageAlert';
 
 const CreateProductForm = ({ onActualizar }) => {
+
+    const baseUrl = "http://localhost:8080"
+
+
 
     const [categories, setCategories] = useState([])
     const [areThereChanges, setAreThereChanges] = useState(false)
@@ -12,6 +17,10 @@ const CreateProductForm = ({ onActualizar }) => {
         categoryId: ''
     });
 
+    const [viewAlertMesaggeFromAPI, setViewAlertMesaggeFromAPI] = useState(false)
+    const [textMessageAlert, setTextMessageAlert] = useState("")
+
+
     // const categories = [
     //     { id: '1', name: 'Electronics' },
     //     { id: '2', name: 'Clothing' },
@@ -21,16 +30,16 @@ const CreateProductForm = ({ onActualizar }) => {
     // ];
 
     useEffect(() => {
-    axios.get("http://localhost:8080/api/category/")
-    .then((response) => {
-      console.log(response.data)
-      setCategories(response.data)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+        axios.get(`${baseUrl}/api/category/`)
+            .then((response) => {
+                console.log(response.data)
+                setCategories(response.data)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
 
-  }, [])
+    }, [])
 
     const formatPrice = (value) => {
         if (!value) return '';
@@ -87,10 +96,24 @@ const CreateProductForm = ({ onActualizar }) => {
         // Here you would typically send the data to your API
 
         onActualizar(submitData)
+
+        setTextMessageAlert("Cambios gurdados exitosamente.")
+        setViewAlertMesaggeFromAPI(true)
     };
+
+
+    const handleOnClickAcceptAlertMessage = () => {
+
+        setViewAlertMesaggeFromAPI(false)
+        setTextMessageAlert("")
+
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 ">
+
+            <MessageAlert view={viewAlertMesaggeFromAPI} onClickAccept={handleOnClickAcceptAlertMessage} text={textMessageAlert} />
+
             <div className="lg:w-[950px] w-full flex flex-col items-center">
                 <div className='w-[90%]'>
                     <motion.div
