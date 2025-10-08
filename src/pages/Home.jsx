@@ -7,6 +7,8 @@ import CardFilter from '../components/CardFilter'
 import axios from 'axios'
 import { useNavigate } from 'react-router'
 import CardsCarousel from '../components/CardsCarousel'
+import Home1 from "../assets/home1.png"
+import Home1V from "../assets/home1V.png"
 
 
 function Home() {
@@ -17,8 +19,27 @@ function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categorias, setCategorias] = useState([])
 
-  
-  
+  //-------------------------------- FUNCION VERIFICAR ANCHO DE PANTALLA -------------------------------- 
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 450);
+
+  useEffect(() => {
+    // Función para actualizar el estado según el ancho de la pantalla
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 450);
+    };
+
+    // Agregar el listener de evento al cargar el componente
+    window.addEventListener('resize', handleResize);
+
+    // Eliminar el listener al desmontar el componente para evitar pérdidas de memoria
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  //-------------------------------- FUNCION VERIFICAR ANCHO DE PANTALLA --------------------------------
+
+
+
 
   const navigate = useNavigate();
 
@@ -47,13 +68,17 @@ function Home() {
     axios.get(`${baseUrl}/api/category/`)
       .then((response) => {
         console.log(response.data)
-        setCategorias(response.data)
+        setCategorias(response.data.slice(0, 4))
       })
       .catch((error) => {
         console.log(error)
       })
 
   }, [])
+
+  const onIrATodosLosProductos = () => {
+    navigate("/products")
+  }
 
 
   return (
@@ -101,39 +126,68 @@ function Home() {
            font-family: "Oooh Baby", cursive;
            text-shadow: 0px 2px 7px #00000080}
 
+           .animated-gradient {
+           font-weight: bold;
+           background: linear-gradient(90deg, #b57ee6, #4a90e2, #6cc070, #b57ee6);
+           background-size: 300% 300%; /* agranda el gradiente para animarlo */
+           -webkit-background-clip: text;
+           -webkit-text-fill-color: transparent;
+           background-clip: text;
+           color: transparent;
+         
+           animation: gradientMove 5s ease infinite;
+          }
+
+          @keyframes gradientMove {
+            0% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+            100% {
+              background-position: 0% 50%;
+            }
+          }
+
         `}
       </style>
 
 
       <div className='w-full min-h-screen flex flex-col pt-20 px-4 bg-slate-50'>
 
-        <h1 className=' text-[40px] font-bold text-gray-600 ml-[50px] mb-[20px]'>Mira los productos disponibles</h1>
-
-        <div className='flex flex-row justify-center items-center flex-wrap gap-8 p-4'>
-
-          <CardFilter id={categorias[0]?.id} img={categorias[0]?.img} name={categorias[0]?.name} />
-
-          <CardFilter id={categorias[1]?.id} img={categorias[1]?.img} name={categorias[1]?.name} />
-          <CardFilter id={categorias[2]?.id} img={categorias[2]?.img} name={categorias[2]?.name} />
-          <CardFilter id={categorias[3]?.id} img={categorias[3]?.img} name={categorias[3]?.name} />
+        <div className='flex flex-row items-center justify-center flex-wrap mb-[40px]'>
+          <h1 className=' text-[34px] lg:text-[45px] font-bold text-gray-600 mr-2'>Mira los productos</h1>
+          <h1 className="font-bold text-[36px] lg:text-[46px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-red-500 to-orange-400 ">disponibles</h1>
         </div>
 
-        <div className='w-full flex flex-col items-center'>
-          <CardsCarousel/>
-        </div>
-        
-
-        {/* <div className='flex flex-row justify-center flex-wrap gap-20'>
-          <CardFilter id={categorias[0].id} img={categorias[0].img} name={categorias[0].name} />
-          <CardFilter id={categorias[1].id} img={categorias[1].img} name={categorias[1].name} />
+        <div className={`${isMobileView ? "hidden" : "show"} flex flex-row justify-center items-center flex-wrap gap-8 p-4`}>
+          {categorias && categorias.length > 0 && categorias.map((categoria) => {
+            return (<CardFilter id={categoria.id} img={categoria.img} name={categoria.name} onActualizarId={onIrATodosLosProductos} />)
+          })}
         </div>
 
-        <div className='flex flex-row justify-center flex-wrap gap-20'>
-          <CardFilter id={categorias[2].id} img={categorias[2].img} name={categorias[2].name} />
-          <CardFilter id={categorias[3].id} img={categorias[3].img} name={categorias[3].name} />
-        </div> */}
+        <div className={`${isMobileView ? "show" : "hidden"} w-full flex flex-col items-center`}>
+          <CardsCarousel arrayCategories={categorias} />
+        </div>
+
+        <div className='w-full animate-pulse flex flex-col justify-center items-center my-[40px]'>
+          <button className='py-2 px-4 rounded-full shadow-md bg-slate-100 border border-rose-300 hover:scale-[101%] hover:shadow-xl transition-all duration-500'
+            onClick={onIrATodosLosProductos}>
+            <h1 className="font-bold text-[30px] lg:text-[40px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-red-500 to-orange-400 ">VER MAS</h1>
+          </button>
+        </div>
 
       </div>
+
+
+      <div className=' min-h-screen bg-slate-100 pt-[30px]'>
+        <h1 className="animated-gradient text-center text-[36px] lg:text-[40px]">TODO LO IMPRESINDIBLE <br /> TODO EN TU iPHONE</h1>
+        <img src={Home1} alt="" className={`${isMobileView ? "hidden" : "show"} w-[75%] m-auto`}/>
+        <img src={Home1V} alt="" className={`${isMobileView ? "show" : "hidden"} m-auto mt-[30px]`}/>
+      </div>
+
+
     </div>
   );
 }

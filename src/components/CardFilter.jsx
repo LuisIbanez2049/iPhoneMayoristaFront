@@ -4,7 +4,7 @@ import Mac from "../assets/mac.jpg"
 function CardFilter({ id, img, name, onActualizarId}) {
   return (
     <button onClick={() => onActualizarId(id, name)}>
-      <div className=' w-[350px] h-[450px] rounded-[20px] shadow-lg hover:scale-[101%] hover:shadow-xl transition-all duration-500'
+      <div className=' w-[88vw] lg:w-[350px] h-[410px] lg:h-[450px] rounded-[20px] shadow-lg hover:scale-[101%] hover:shadow-xl transition-all duration-500'
         style={{
           backgroundImage: `url(${img})`,
           backgroundSize: 'cover',
