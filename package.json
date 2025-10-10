@@ -12,6 +12,7 @@
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
     "axios": "^1.10.0",
+    "framer-motion": "^12.23.22",
     "html-react-parser": "^5.2.6",
     "lucide-react": "^0.540.0",
     "react": "^19.1.0",

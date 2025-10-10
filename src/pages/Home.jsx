@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import VideoTablets from "../assets/videoTablets.mp4"
+import Iphones17 from "../assets/videoIphones17.mp4"
 import VideoMacs from "../assets/videoMacs.mp4"
 import VideoiPhones from "../assets/videoiPhones.mp4"
 import CardFilter from '../components/CardFilter'
@@ -9,13 +10,16 @@ import { useNavigate } from 'react-router'
 import CardsCarousel from '../components/CardsCarousel'
 import Home1 from "../assets/home1.png"
 import Home1V from "../assets/home1V.png"
+import CardCarouselComentarios from '../components/CardCarouselComentarios'
+import CardCarouselComentariosMobile from '../components/CardCarouselComentariosMobile'
+import SectionInfo from '../components/SectionInfo'
 
 
 function Home() {
 
   const baseUrl = "http://localhost:8080"
 
-  const videos = [VideoiPhones, VideoMacs, VideoTablets]; // array con las rutas locales
+  const videos = [VideoiPhones, VideoMacs, VideoTablets, Iphones17]; // array con las rutas locales
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categorias, setCategorias] = useState([])
 
@@ -181,11 +185,41 @@ function Home() {
       </div>
 
 
-      <div className=' min-h-screen bg-slate-100 pt-[30px]'>
+      <div className=' min-h-screen bg-slate-100 pt-[30px] pb-[20px]'>
         <h1 className="animated-gradient text-center text-[36px] lg:text-[40px]">TODO LO IMPRESINDIBLE <br /> TODO EN TU iPHONE</h1>
-        <img src={Home1} alt="" className={`${isMobileView ? "hidden" : "show"} w-[75%] m-auto`}/>
-        <img src={Home1V} alt="" className={`${isMobileView ? "show" : "hidden"} m-auto mt-[30px]`}/>
+        <img src={Home1} alt="" className={`${isMobileView ? "hidden" : "show"} w-[75%] m-auto`} />
+        <img src={Home1V} alt="" className={`${isMobileView ? "show" : "hidden"} m-auto mt-[30px]`} />
+
+        <div className='w-full flex flex-col justify-center items-center my-[40px]'>
+          <button className='py-2 px-4 rounded-full shadow-md bg-slate-100 border border-rose-300 hover:scale-[101%] hover:shadow-xl transition-all duration-500'
+            onClick={onIrATodosLosProductos}>
+            <h1 className="font-bold text-[30px] lg:text-[40px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-red-500 to-orange-400 ">VER MAS</h1>
+          </button>
+        </div>
+
       </div>
+
+
+
+
+      <div className='w-full py-[30px] h-[600px] '>
+        <div className='flex flex-row justify-center gap-2 font-semibold text-gray-700'>
+          <h1 className='text-[35px]'>Lo que dicen quienes ya confiaron en</h1>
+          <h1 className="font-bold text-[30px] lg:text-[35px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-red-500 to-orange-400 ">nosotros</h1>
+        </div>
+        <div className={`${isMobileView ? "hidden" : "show"}`}>
+          <CardCarouselComentarios />
+        </div>
+        <div className={`${isMobileView ? "show" : "hidden"}`}>
+          <CardCarouselComentariosMobile />
+        </div>
+      </div>
+
+      <div>
+        <SectionInfo/>
+      </div>
+
+
 
 
     </div>

@@ -2,6 +2,7 @@ import React from 'react'
 import Header from '../components/Header'
 import { Outlet, useParams } from 'react-router-dom'
 import NavBar from '../components/NavBar'
+import Footer from '../components/Footer'
 
 function MainLayout() {
 
@@ -17,7 +18,7 @@ function MainLayout() {
 
         <Outlet/>
 
-        
+        <Footer/>
     </div>
   )
 }
