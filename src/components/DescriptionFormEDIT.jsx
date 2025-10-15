@@ -191,36 +191,97 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
   };
 
   // Ejecutar comandos de formato
+
   const execCommand = (command, value = null) => {
-    if (["justifyLeft", "justifyCenter", "justifyRight"].includes(command)) {
-      const selection = window.getSelection();
-      if (!selection.rangeCount) return;
-      const range = selection.getRangeAt(0);
-      let node = range.commonAncestorContainer;
+  if (["justifyLeft", "justifyCenter", "justifyRight"].includes(command)) {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
 
-      // Si es texto, subimos al padre
-      if (node.nodeType === 3) node = node.parentNode;
+    const range = selection.getRangeAt(0);
+    let node = range.commonAncestorContainer;
 
-      // Subimos en la jerarquía hasta encontrar un <p>
-      while (node && node.nodeName !== "P") {
-        node = node.parentNode;
-      }
+    console.log(node.nodeName)
 
-      if (node && node.nodeName === "P") {
-        if (command === "justifyLeft")
-          replaceClass(node, /^text-(left|center|right)$/, "text-left");
-        if (command === "justifyCenter")
-          replaceClass(node, /^text-(left|center|right)$/, "text-center");
-        if (command === "justifyRight")
-          replaceClass(node, /^text-(left|center|right)$/, "text-right");
-      }
-      return; // evitamos que se ejecute el execCommand nativo
+    // Si es texto, subimos al padre
+    if (node.nodeType === Node.TEXT_NODE) {
+      node = node.parentNode;
     }
 
-    // Si no es un comando custom → usamos execCommand nativo
-    document.execCommand(command, false, value);
+    // Buscamos el contenedor más cercano válido
+    while (
+      node &&
+      node.nodeType === Node.ELEMENT_NODE &&
+      !["P", "DIV", "LI", "SPAN"].includes(node.nodeName)
+    ) {
+      node = node.parentNode;
+    }
+
+    // Si no encontramos un contenedor válido, creamos un <p>
+    if (!node || !["P", "DIV", "LI", "SPAN"].includes(node.nodeName)) {
+      const p = document.createElement("p");
+      p.textContent = selection.toString();
+
+      range.deleteContents();
+      range.insertNode(p);
+
+      node = p;
+
+      // Volvemos a seleccionar el nuevo nodo
+      selection.removeAllRanges();
+      const newRange = document.createRange();
+      newRange.selectNodeContents(node);
+      selection.addRange(newRange);
+    }
+
+    // Aplicamos la clase según el comando
+    if (node) {
+      if (command === "justifyLeft") {
+        replaceClass(node, /^text-(left|center|right)$/, "text-left");
+      } else if (command === "justifyCenter") {
+        replaceClass(node, /^text-(left|center|right)$/, "text-center");
+      } else if (command === "justifyRight") {
+        replaceClass(node, /^text-(left|center|right)$/, "text-right");
+      }
+    }
+
     editorRef.current?.focus();
-  };
+    return; // Evitamos el execCommand nativo
+  }
+
+  // Si no es un comando custom → usamos execCommand nativo
+  document.execCommand(command, false, value);
+  editorRef.current?.focus();
+};
+  // const execCommand = (command, value = null) => {
+  //   if (["justifyLeft", "justifyCenter", "justifyRight"].includes(command)) {
+  //     const selection = window.getSelection();
+  //     if (!selection.rangeCount) return;
+  //     const range = selection.getRangeAt(0);
+  //     let node = range.commonAncestorContainer;
+
+  //     // Si es texto, subimos al padre
+  //     if (node.nodeType === 3) node = node.parentNode;
+
+  //     // Subimos en la jerarquía hasta encontrar un <p>
+  //     while (node && node.nodeName !== "P") {
+  //       node = node.parentNode;
+  //     }
+
+  //     if (node && node.nodeName === "P") {
+  //       if (command === "justifyLeft")
+  //         replaceClass(node, /^text-(left|center|right)$/, "text-left");
+  //       if (command === "justifyCenter")
+  //         replaceClass(node, /^text-(left|center|right)$/, "text-center");
+  //       if (command === "justifyRight")
+  //         replaceClass(node, /^text-(left|center|right)$/, "text-right");
+  //     }
+  //     return; // evitamos que se ejecute el execCommand nativo
+  //   }
+
+  //   // Si no es un comando custom → usamos execCommand nativo
+  //   document.execCommand(command, false, value);
+  //   editorRef.current?.focus();
+  // };
 
 
 
@@ -614,7 +675,7 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
             alignItems: "center",
           }}
 
-          className=" sticky top-6 rounded-[8px] shadow-lg"
+          className=" sticky top-[120px] rounded-[8px] shadow-lg"
         >
           {/* Formato de texto */}
           <div>

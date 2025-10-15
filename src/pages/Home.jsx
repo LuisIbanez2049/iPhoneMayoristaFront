@@ -13,6 +13,7 @@ import Home1V from "../assets/home1V.png"
 import CardCarouselComentarios from '../components/CardCarouselComentarios'
 import CardCarouselComentariosMobile from '../components/CardCarouselComentariosMobile'
 import SectionInfo from '../components/SectionInfo'
+import CardFilterHome from '../components/CardFilterHome'
 
 
 function Home() {
@@ -167,7 +168,7 @@ function Home() {
 
         <div className={`${isMobileView ? "hidden" : "show"} flex flex-row justify-center items-center flex-wrap gap-8 p-4`}>
           {categorias && categorias.length > 0 && categorias.map((categoria) => {
-            return (<CardFilter id={categoria.id} img={categoria.img} name={categoria.name} onActualizarId={onIrATodosLosProductos} />)
+            return (<CardFilterHome id={categoria.id} img={categoria.img} name={categoria.name} onActualizarId={onIrATodosLosProductos} />)
           })}
         </div>
 
@@ -203,9 +204,11 @@ function Home() {
 
 
       <div className='w-full py-[30px] h-[600px] '>
-        <div className='flex flex-row justify-center gap-2 font-semibold text-gray-700'>
-          <h1 className='text-[35px]'>Lo que dicen quienes ya confiaron en</h1>
-          <h1 className="font-bold text-[30px] lg:text-[35px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-red-500 to-orange-400 ">nosotros</h1>
+        <div className='flex flex-row flex-wrap justify-center gap-2 font-semibold text-gray-700 '>
+          <h1 className='text-[35px] text-center '>Lo que dicen quienes ya confiaron en 
+            <span className="font-bold text-[35px] lg:text-[35px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-red-500 to-orange-400 "> nosotros</span>
+          </h1>
+          {/* <h1 className="font-bold text-[30px] lg:text-[35px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-red-500 to-orange-400 ">nosotros</h1> */}
         </div>
         <div className={`${isMobileView ? "hidden" : "show"}`}>
           <CardCarouselComentarios />

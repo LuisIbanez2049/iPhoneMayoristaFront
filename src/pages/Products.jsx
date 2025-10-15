@@ -60,8 +60,7 @@ function Products() {
   return (
     <div className=' border border-black'>
       <LoadingSpinner isLoading={isLoading}/>
-        Products
-        <div className='w-[100%] flex flex-row justify-center gap-8 flex-wrap'>
+        <div className='w-[100%] flex flex-row justify-start lg:justify-center px-6 py-3 gap-8 overflow-x-scroll mt-[120px] scroll-mx-7'>
           {categorias && categorias.length > 0 && categorias.map((categoria) => {
             return (
               <CardFilter id={categoria.id} img={categoria.img} name={categoria.name} onActualizarId={actualizarCategoryId}/>
@@ -70,25 +69,27 @@ function Products() {
             
         </div>
 
-        <div className={`w-[100%] flex flex-row justify-end mt-[30px] ${seeFilteredProduct ? "show" : "hidden"}`}>
-          <button className='text-[15px] font-semibold text-[#00000096]' onClick={() => setSeeFilteredProduct(false)}> VER TODOS LOS PRODUCTOS</button>
-        </div>
+        
 
-        <div className={`w-[100%] flex flex-row justify-center px-[10%] mt-[80px] gap-8 flex-wrap ${seeFilteredProduct ? "hidden" : "show"}`}>
+        <div className={`w-[100%] flex flex-row justify-center px-[10%] mt-[80px] gap-8 p-4 flex-wrap ${seeFilteredProduct ? "hidden" : "show"}`}>
           {products && products.length > 0 && products.map((product) => {
             return (
-              <CardProduct img={product.firstImage} name={product.name} id={product.id}/>
+              <CardProduct img={product.firstImage} name={product.name} id={product.id} price={product.price}/>
             )
           })}
             
         </div>
 
 
-        <h1 className={`font-bold text-[35px] mt-[50px] text-[#000000c5] ${seeFilteredProduct ? "show" : "hidden"}`}>{nameFilteredCategory}</h1>
-        <div className={`w-[100%] flex flex-row justify-center px-[10%] gap-8 flex-wrap ${seeFilteredProduct ? "show" : "hidden"}`}>
+        <h1 className={` font-bold text-[35px] text-center mt-[50px] text-[#000000c5] ${seeFilteredProduct ? "show" : "hidden"}`}>{nameFilteredCategory}</h1>
+        <div className={`w-[100%] flex flex-row justify-center mt-[10px] ${seeFilteredProduct ? "show" : "hidden"}`}>
+          <button className='text-[15px] font-semibold text-[#00000096]' onClick={() => setSeeFilteredProduct(false)}> VER TODOS LOS PRODUCTOS</button>
+        </div>
+
+        <div className={`w-[100%] flex flex-row justify-center px-[10%] gap-8 p-4 flex-wrap ${seeFilteredProduct ? "show" : "hidden"}`}>
           {filteredProducts && filteredProducts.length > 0 && filteredProducts.map((product) => {
             return (
-              <CardProduct img={product.firstImage} name={product.name} id={product.id}/>
+              <CardProduct img={product.firstImage} name={product.name} id={product.id} price={product.price}/>
             )
           })}
             

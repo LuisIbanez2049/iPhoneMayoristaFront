@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import CardFilter from './CardFilter';
 import { useNavigate } from 'react-router';
+import CardFilterHome from './CardFilterHome';
 
 function CardsCarousel({arrayCategories}) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -58,7 +59,7 @@ function CardsCarousel({arrayCategories}) {
           {arrayCategories && arrayCategories.length > 0 && arrayCategories.map((card) => (
             <div key={card.id} className="w-full flex-shrink-0">
               <div className="flex justify-center py-4">
-                <CardFilter 
+                <CardFilterHome 
                   id={card.id} 
                   img={card.img} 
                   name={card.name} 

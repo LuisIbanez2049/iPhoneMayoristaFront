@@ -115,7 +115,7 @@ function Product() {
 
   }, [])
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-8">
 
       <LoadingSpinner isLoading={isLoading}/>
       {/* Fullscreen Modal */}

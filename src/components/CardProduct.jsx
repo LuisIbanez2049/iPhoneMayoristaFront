@@ -15,7 +15,7 @@ function CardProduct({ img, name, price, id }) {
 
         </div>
         <h1 className='w-[240px] font-semibold '>{name}</h1>
-        <h1 className='w-[240px]'>$49.00</h1>
+        <h1 className='w-[240px]'>${price.toLocaleString()} <span className="text-[14px] text-gray-500"> USD</span> </h1>
       </div>
     </Link>
   )

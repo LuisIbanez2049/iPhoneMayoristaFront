@@ -18,7 +18,9 @@ function MainLayout() {
 
         <Outlet/>
 
-        <Footer/>
+        <div className={`${login == "login" ? "hidden" : "show"} ${token ? "hidden" : "show"}`}>
+          <Footer/>
+        </div>
     </div>
   )
 }

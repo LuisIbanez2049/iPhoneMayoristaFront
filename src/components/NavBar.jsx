@@ -1,13 +1,37 @@
 
 import { motion } from 'framer-motion';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 function NavBar() {
 
   const [sizeNavBar, setSizeNavBar] = useState(53)
+  const [heightNavBar, setHeightNavBar] = useState(50)
+  const token = localStorage.getItem("token")
 
   const navigate = useNavigate();
+
+
+    //-------------------------------- FUNCION VERIFICAR ANCHO DE PANTALLA -------------------------------- 
+    const [isMobileView, setIsMobileView] = useState(window.innerWidth < 450);
+  
+    useEffect(() => {
+      // Función para actualizar el estado según el ancho de la pantalla
+      const handleResize = () => {
+        setIsMobileView(window.innerWidth < 450);
+      };
+  
+      // Agregar el listener de evento al cargar el componente
+      window.addEventListener('resize', handleResize);
+  
+      // Eliminar el listener al desmontar el componente para evitar pérdidas de memoria
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
+    //-------------------------------- FUNCION VERIFICAR ANCHO DE PANTALLA --------------------------------
+
+
   return (
     <div className=' flex flex-row justify-center gap-4 p-2 absolute top-0 w-full'>
       {/* <Link to="/">
@@ -42,13 +66,29 @@ function NavBar() {
         <i className="fa-solid fa-right-from-bracket"></i>
       </button> */}
 
-      <div class="container container--inline border border-blue-500 fixed z-20 top-6">
+      <div class="container container--inline border border-blue-500 fixed z-20 top-1 w-[600px] p-2">
         <div class="glass-container glass-container--rounded glass-container--large ">
           <div class="glass-filter"></div>
           <div class="glass-overlay"></div>
           <div class="glass-specular"></div>
           {/* En el div de abajo controlo el tamaño de la barra de navegación */}
-          <div className={`glass-content glass-content--inline transition-all duration-500 overflow-hidden px-3 py-3`}>
+          <div className={`glass-content glass-content--inline transition-all duration-500 overflow-hidden px-3 py-3`}
+          onMouseEnter={() => {
+            if (isMobileView && token) {
+              setSizeNavBar(145)
+              setHeightNavBar(350)
+            } else {
+              setSizeNavBar("")
+            }
+          }}  
+          onMouseLeave={() => {
+            if (isMobileView && token) {
+              setSizeNavBar(53)
+              setHeightNavBar(50)
+            } else {
+              setSizeNavBar(53)
+            }
+          }}>
 
             {/* <div className={`glass-content glass-content--inline  border border-black transition-all duration-500 overflow-hidden px-3 py-3 ${sizeNavBar}`}
           onMouseEnter={() => setSizeNavBar("")} onMouseLeave={() => setSizeNavBar("w-[76px]")} ></div> */}
@@ -56,10 +96,9 @@ function NavBar() {
             
 
             <motion.div
-              animate={{ width: sizeNavBar }}
+              animate={{ width: sizeNavBar, height: heightNavBar}}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="glass-content glass-content--inline rounded-lg"
-              onMouseEnter={() => setSizeNavBar("")}  onMouseLeave={() => setSizeNavBar(53)}
+              className={`glass-content glass-content--inline flex ${token ? "flex-col" : "flex-row"} lg:flex-row justify-center rounded-lg`}
             >
             
               <Link to="/">
@@ -73,8 +112,25 @@ function NavBar() {
                 <h1 className='font-bold'> Store</h1>
               </div>
             </Link>
+
+            <div className={`${token ? "show" : "hidden"}`}>
+              <Link to="/product/create">
+              <div className={` w-[140px] p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
+                <h1 className='font-bold'> Crear Producto</h1>
+              </div>
+            </Link>
+            </div>
+
+            <div className={`${token ? "show" : "hidden"}`}>
+              <Link to="/category/create">
+              <div className={` w-[145px] p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
+                <h1 className='font-bold'> Crear Categoria</h1>
+              </div>
+            </Link>
+            </div>
+
               <button
-              className='px-4 py-3 text-black bg-[#ffffff18] rounded-full flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500' onClick={() => {
+              className={`${token ? "show" : "hidden"} px-4 py-3 text-black bg-[#ffffff18] rounded-full flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`} onClick={() => {
               navigate("/login")
               localStorage.clear()
               location.reload()
@@ -186,8 +242,6 @@ display:none;
 .glass-content {
   position: relative;
   z-index: 3;
-  display: flex;
-  align-items: center;
   gap: 20px;
 
   /* padding: 1rem 1.5rem 0.9rem; */
