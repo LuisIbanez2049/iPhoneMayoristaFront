@@ -9,6 +9,7 @@ import CreateProduct from "./pages/CreateProduct";
 import EditProduct from "./pages/EditProduct";
 import CreateCategory from "./pages/CreateCategory";
 import LoginForm from "./pages/LoginForm";
+import ProductosMayoristas from "./pages/ProductosMayoristas";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -21,6 +22,7 @@ function App() {
 
             <Route index element={<Home />} />
             <Route path="/products" element={<Products/>}/>
+            <Route path="/mayorista" element={<ProductosMayoristas/>}/>
             <Route path="/acategory:id" element={<Products/>}/>
             <Route path="/product/:id" element = {<Product/>}/>
             <Route path="/product/create" element = {<CreateProduct/>}/>
