@@ -153,10 +153,10 @@ function Product() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Carousel Section */}
-          <div className="lg:w-1/2 lg:h-[100vh] w-full lg:sticky lg:top-[20px] ">
+          <div className="lg:w-[40vw] lg:h-[100vh] w-full lg:sticky lg:top-[20px] border border-red-700">
             <div className="bg-gray-50 rounded-2xl p-4 shadow-sm ">
               <div className="relative bg-white rounded-xl overflow-hidden ">
-                <div className="relative w-full lg:h-[600px] h-[350px]">
+                <div className="relative w-full lg:h-[600px] h-[350px] border border-red-700">
                   {renderMedia(productData.fileLinks[currentIndex])}
                   
                   {/* Navigation Buttons */}
@@ -216,7 +216,7 @@ function Product() {
           </div>
           
           {/* Product Info Section */}
-          <div className="lg:w-1/2 w-full flex flex-col">
+          <div className="lg:w-[40vw] w-full flex flex-col">
             <div className=" bg-white rounded-2xl p-6 shadow-sm sticky top-8 h-fit border border-black">
 
               <button className={`${isToken ? "show" : "hidden"} absolute right-5 bg-[#002fff] p-3 text-[white] font-semibold text-[20px] rounded-lg shadow-lg`}

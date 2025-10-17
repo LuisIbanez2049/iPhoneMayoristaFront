@@ -19,6 +19,8 @@ const CreateProductForm = ({ onActualizar }) => {
 
     const [viewAlertMesaggeFromAPI, setViewAlertMesaggeFromAPI] = useState(false)
     const [textMessageAlert, setTextMessageAlert] = useState("")
+    const [isMinorista, setIsMinorista] = useState(true)
+    const [categoryType, setCategoryType] = useState("MINORISTA")
 
 
     // const categories = [
@@ -185,6 +187,22 @@ const CreateProductForm = ({ onActualizar }) => {
 
                             {/* Category Field */}
                             <div className="space-y-2">
+                                <div className='w-full flex flex-row justify-center gap-8'>
+                                    <button type='button' onClick={() => {
+                                        setIsMinorista(true)
+                                        setCategoryType("MINORISTA")
+                                    }}>
+                                        <h1 className={`transition-all duration-500 ${isMinorista ? "bg-black text-white" : "bg-slate-200"} hover:bg-black hover:text-white py-2 px-3 rounded-full shadow-md`}>Minorista</h1>
+                                    </button>
+
+                                    <button type='button'
+                                        onClick={() => {
+                                            setIsMinorista(false)
+                                            setCategoryType("MAYORISTA")
+                                        }}>
+                                        <h1 className={`transition-all duration-500 ${isMinorista ? "bg-slate-200" : "bg-black text-white"} hover:bg-black hover:text-white py-2 px-3 rounded-full shadow-md`}>Mayorista</h1>
+                                    </button>
+                                </div>
                                 <label htmlFor="categoryId" className="block text-sm font-semibold text-gray-700">
                                     Category
                                 </label>
@@ -197,11 +215,15 @@ const CreateProductForm = ({ onActualizar }) => {
                                     required
                                 >
                                     <option value="">Select a category</option>
-                                    {categories && categories.length > 0 && categories.map((category) => (
-                                        <option key={category.id} value={category.id}>
-                                            {category.name}
-                                        </option>
-                                    ))}
+                                    {categories && categories.length > 0 && categories.map((category) => {
+                                        if (category.sectionCategory === categoryType) {
+                                            return (
+                                                <option key={category.id} value={category.id}>
+                                                    {category.name}
+                                                </option>
+                                            )
+                                        }
+                                    })}
                                 </select>
                             </div>
 

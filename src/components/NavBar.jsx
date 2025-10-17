@@ -66,17 +66,17 @@ function NavBar() {
         <i className="fa-solid fa-right-from-bracket"></i>
       </button> */}
 
-      <div class="container container--inline border border-blue-500 fixed z-20 top-1 w-[600px] p-2">
-        <div class="glass-container glass-container--rounded glass-container--large ">
-          <div class="glass-filter"></div>
-          <div class="glass-overlay"></div>
-          <div class="glass-specular"></div>
+      <div className="container container--inline border border-blue-500 fixed z-20 top-1 w-[780px] p-2">
+        <div className="glass-container glass-container--rounded glass-container--large ">
+          <div className="glass-filter"></div>
+          <div className="glass-overlay"></div>
+          <div className="glass-specular"></div>
           {/* En el div de abajo controlo el tamaño de la barra de navegación */}
           <div className={`glass-content glass-content--inline transition-all duration-500 overflow-hidden px-3 py-3`}
           onMouseEnter={() => {
             if (isMobileView && token) {
               setSizeNavBar(145)
-              setHeightNavBar(350)
+              setHeightNavBar(400)
             } else {
               setSizeNavBar("")
             }
@@ -98,7 +98,7 @@ function NavBar() {
             <motion.div
               animate={{ width: sizeNavBar, height: heightNavBar}}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className={`glass-content glass-content--inline flex ${token ? "flex-col" : "flex-row"} lg:flex-row justify-center rounded-lg`}
+              className={`glass-content glass-content--inline flex ${token ? "flex-col" : "flex-row"} lg:flex-row gap-[20px] justify-center rounded-lg`}
             >
             
               <Link to="/">
@@ -109,14 +109,22 @@ function NavBar() {
 
             <Link to="/products">
               <div className='p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500'>
-                <h1 className='font-bold'> Store</h1>
+                <h1 className='font-bold'>Store</h1>
               </div>
             </Link>
 
             <div className={`${token ? "show" : "hidden"}`}>
+              <Link to="/mayorista">
+              <div className={` w-[145px] p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
+                <h1 className='font-bold'>Mayorista</h1>
+              </div>
+            </Link>
+            </div>
+
+            <div className={`${token ? "show" : "hidden"}`}>
               <Link to="/product/create">
               <div className={` w-[140px] p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
-                <h1 className='font-bold'> Crear Producto</h1>
+                <h1 className='font-bold'>Crear Producto</h1>
               </div>
             </Link>
             </div>
@@ -124,7 +132,7 @@ function NavBar() {
             <div className={`${token ? "show" : "hidden"}`}>
               <Link to="/category/create">
               <div className={` w-[145px] p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
-                <h1 className='font-bold'> Crear Categoria</h1>
+                <h1 className='font-bold'>Crear Categoria</h1>
               </div>
             </Link>
             </div>
@@ -149,13 +157,13 @@ function NavBar() {
 
 
 
-      <div class="container border border-red-500 fixed z-10 top-6">
+      <div className="container border border-red-500 fixed z-10 top-6">
 
 
-        <div class="glass-container">
-          <div class="glass-filter"></div>
-          <div class="glass-overlay"></div>
-          <div class="glass-specular"></div>
+        <div className="glass-container">
+          <div className="glass-filter"></div>
+          <div className="glass-overlay"></div>
+          <div className="glass-specular"></div>
 
 
 
@@ -242,15 +250,12 @@ display:none;
 .glass-content {
   position: relative;
   z-index: 3;
-  gap: 20px;
-
   /* padding: 1rem 1.5rem 0.9rem; */
   
 }
 
 .glass-content--inline {
 /* padding: 0.25rem 2rem 0.25rem 0.75rem; */
-  
   flex: 1 1 auto;
   justify-content: space-between;
 }

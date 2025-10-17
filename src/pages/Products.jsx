@@ -162,7 +162,7 @@ function Products() {
 
       {/* 🔹 Productos filtrados por categoría */}
       <div 
-      className={`w-[100%] flex flex-row justify-center px-[10%] gap-8 p-4 flex-wrap transition-all duration-700 ease-in-out ${seeFilteredProduct ? "opacity-100 translate-y-0 z-10" : "opacity-0 absolute pointer-events-none z-0"}`}>
+      className={`w-[100%] flex flex-row justify-center px-[10%] gap-8 p-4 flex-wrap transition-all duration-700 ease-in-out ${seeFilteredProduct ? "opacity-100 translate-y-0 z-10" : "opacity-0 absolute pointer-events-none z-0 hidden"}`}>
         {productosParaMostrar && productosParaMostrar.length > 0 ? (
           productosParaMostrar.map((product) => (
             <CardProduct

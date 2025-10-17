@@ -11,6 +11,7 @@ export default function DragAndDropUploader({ onActulizarArchivos }) {
   const [isLoading, setIsLoading] = useState(false)
   const [viewAlertMesaggeFromAPI, setViewAlertMesaggeFromAPI] = useState(false)
   const [textMessageAlert, setTextMessageAlert] = useState("")
+  const [isUploadedFiles, setIsUploadedFiles] = useState(false)
 
   // Manejar drop de archivos
   const handleDrop = (e) => {
@@ -70,7 +71,7 @@ export default function DragAndDropUploader({ onActulizarArchivos }) {
     setViewAlertMesaggeFromAPI(true)
     console.log("URLs finales en orden:", urls);
     onActulizarArchivos(urls)
-
+    setIsUploadedFiles(true)
     // Aquí podrías enviar `urls` a tu API
   };
 
@@ -178,7 +179,7 @@ export default function DragAndDropUploader({ onActulizarArchivos }) {
         {files.length > 0 && (
           <button
             onClick={handleUpload}
-            className="mt-6 w-full bg-[#002fff] text-white py-2 rounded-lg hover:bg-blue-700"
+            className={` transition-all duration-500 mt-6 w-full ${isUploadedFiles ? "bg-slate-200" : "bg-[#002fff]"} text-white py-2 rounded-lg hover:bg-blue-700`}
           >
             Subir archivos
           </button>
