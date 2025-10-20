@@ -17,6 +17,14 @@ function Products() {
   const [seeFilteredProduct, setSeeFilteredProduct] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
+  //----------------------------FUNCIÓN PARA QUE CUANDO CARGUE EL COMPONENTE SE VEA DESDE EL PRINCIPIO Y NO DESDE CAULQUIER PARTE DE LA PAGINA
+  useEffect(() => {
+     window.scrollTo(0, 0); // X=0, Y=0 (arriba del todo)
+  }, []);
+  //----------------------------FUNCIÓN PARA QUE CUANDO CARGUE EL COMPONENTE SE VEA DESDE EL PRINCIPIO Y NO DESDE CAULQUIER PARTE DE LA PAGINA
+
+    
+
   // 🔍 Nuevos estados para filtros
   const [searchTerm, setSearchTerm] = useState("")
   const [sortOrder, setSortOrder] = useState("") // "asc" | "desc" | ""
@@ -86,7 +94,7 @@ function Products() {
   const productosParaMostrar = obtenerProductosFiltrados()
 
   return (
-    <div className='border border-black'>
+    <div className='pb-[50px]'>
       <LoadingSpinner isLoading={isLoading} />
 
       {/* 🔹 Filtros de categoría */}

@@ -8,28 +8,29 @@ function NavBar() {
   const [sizeNavBar, setSizeNavBar] = useState(53)
   const [heightNavBar, setHeightNavBar] = useState(50)
   const token = localStorage.getItem("token")
+  const [desactivarBotonHome, setDesactivarBotonHome] = useState(true)
 
   const navigate = useNavigate();
 
 
-    //-------------------------------- FUNCION VERIFICAR ANCHO DE PANTALLA -------------------------------- 
-    const [isMobileView, setIsMobileView] = useState(window.innerWidth < 450);
-  
-    useEffect(() => {
-      // Función para actualizar el estado según el ancho de la pantalla
-      const handleResize = () => {
-        setIsMobileView(window.innerWidth < 450);
-      };
-  
-      // Agregar el listener de evento al cargar el componente
-      window.addEventListener('resize', handleResize);
-  
-      // Eliminar el listener al desmontar el componente para evitar pérdidas de memoria
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }, []);
-    //-------------------------------- FUNCION VERIFICAR ANCHO DE PANTALLA --------------------------------
+  //-------------------------------- FUNCION VERIFICAR ANCHO DE PANTALLA -------------------------------- 
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 450);
+
+  useEffect(() => {
+    // Función para actualizar el estado según el ancho de la pantalla
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 450);
+    };
+
+    // Agregar el listener de evento al cargar el componente
+    window.addEventListener('resize', handleResize);
+
+    // Eliminar el listener al desmontar el componente para evitar pérdidas de memoria
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  //-------------------------------- FUNCION VERIFICAR ANCHO DE PANTALLA --------------------------------
 
 
   return (
@@ -66,88 +67,96 @@ function NavBar() {
         <i className="fa-solid fa-right-from-bracket"></i>
       </button> */}
 
-      <div className="container container--inline border border-blue-500 fixed z-20 top-1 w-[780px] p-2">
+      <div className="container container--inline fixed z-20 top-1 w-full lg:w-[780px] p-2">
         <div className="glass-container glass-container--rounded glass-container--large ">
           <div className="glass-filter"></div>
           <div className="glass-overlay"></div>
           <div className="glass-specular"></div>
           {/* En el div de abajo controlo el tamaño de la barra de navegación */}
           <div className={`glass-content glass-content--inline transition-all duration-500 overflow-hidden px-3 py-3`}
-          onMouseEnter={() => {
-            if (isMobileView && token) {
-              setSizeNavBar(145)
-              setHeightNavBar(400)
-            } else {
-              setSizeNavBar("")
-            }
-          }}  
-          onMouseLeave={() => {
-            if (isMobileView && token) {
-              setSizeNavBar(53)
-              setHeightNavBar(50)
-            } else {
-              setSizeNavBar(53)
-            }
-          }}>
+            onMouseEnter={() => {
+              if (isMobileView && token) {
+                setSizeNavBar(145)
+                setHeightNavBar(400)
+              } else {
+                setSizeNavBar("")
+              }
+            }}
+            onMouseLeave={() => {
+              if (isMobileView && token) {
+                setSizeNavBar(53)
+                setHeightNavBar(50)
+              } else {
+                setSizeNavBar(53)
+              }
+            }}>
 
             {/* <div className={`glass-content glass-content--inline  border border-black transition-all duration-500 overflow-hidden px-3 py-3 ${sizeNavBar}`}
           onMouseEnter={() => setSizeNavBar("")} onMouseLeave={() => setSizeNavBar("w-[76px]")} ></div> */}
 
-            
+
 
             <motion.div
-              animate={{ width: sizeNavBar, height: heightNavBar}}
+              animate={{ width: sizeNavBar, height: heightNavBar }}
               transition={{ duration: 0.8, ease: "easeOut" }}
+              onMouseEnter={() => setDesactivarBotonHome(false)}
+              onMouseLeave={() => setDesactivarBotonHome(true)}
               className={`glass-content glass-content--inline flex ${token ? "flex-col" : "flex-row"} lg:flex-row gap-[20px] justify-center rounded-lg`}
             >
-            
-              <Link to="/">
-              <div className=' px-4 py-3 text-black bg-[#ffffff18] rounded-full flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500'>
-                <i className="fa-brands fa-apple text-[25px]"></i>
-              </div>
-            </Link>
 
-            <Link to="/products">
-              <div className='p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500'>
-                <h1 className='font-bold'>Store</h1>
-              </div>
-            </Link>
+                <div className={` ${isMobileView ? "hidden" : "show"} px-4 py-3 text-black bg-[#ffffff18] rounded-full flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
+                  <button onClick={() => navigate("/")}>
+                    <i className="fa-brands fa-apple text-[25px]"></i>
+                  </button>
+                </div>
 
-            <div className={`${token ? "show" : "hidden"}`}>
-              <Link to="/mayorista">
-              <div className={` w-[145px] p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
-                <h1 className='font-bold'>Mayorista</h1>
+              <div className={` ${isMobileView ? "show" : "hidden"} px-4 py-3 text-black bg-[#ffffff18] rounded-full flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
+                <button disabled={desactivarBotonHome}  onClick={() => navigate("/")}>
+                  <i className="fa-brands fa-apple text-[25px]"></i>
+                </button>
               </div>
-            </Link>
-            </div>
 
-            <div className={`${token ? "show" : "hidden"}`}>
-              <Link to="/product/create">
-              <div className={` w-[140px] p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
-                <h1 className='font-bold'>Crear Producto</h1>
-              </div>
-            </Link>
-            </div>
+              <Link to="/products">
+                <div className='p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500'>
+                  <h1 className='font-bold'>Store</h1>
+                </div>
+              </Link>
 
-            <div className={`${token ? "show" : "hidden"}`}>
-              <Link to="/category/create">
-              <div className={` w-[145px] p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
-                <h1 className='font-bold'>Crear Categoria</h1>
+              <div className={`${token ? "show" : "hidden"}`}>
+                <Link to="/mayorista">
+                  <div className={` w-[145px] p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
+                    <h1 className='font-bold'>Mayorista</h1>
+                  </div>
+                </Link>
               </div>
-            </Link>
-            </div>
+
+              <div className={`${token ? "show" : "hidden"}`}>
+                <Link to="/product/create">
+                  <div className={` w-[140px] p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
+                    <h1 className='font-bold'>Crear Producto</h1>
+                  </div>
+                </Link>
+              </div>
+
+              <div className={`${token ? "show" : "hidden"}`}>
+                <Link to="/category/create">
+                  <div className={` w-[145px] p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
+                    <h1 className='font-bold'>Crear Categoria</h1>
+                  </div>
+                </Link>
+              </div>
 
               <button
-              className={`${token ? "show" : "hidden"} px-4 py-3 text-black bg-[#ffffff18] rounded-full flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`} onClick={() => {
-              navigate("/login")
-              localStorage.clear()
-              location.reload()
-            }}>
-              <i className="fa-solid fa-right-from-bracket"></i>
-            </button>
+                className={`${token ? "show" : "hidden"} px-4 py-3 text-black bg-[#ffffff18] rounded-full flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`} onClick={() => {
+                  navigate("/login")
+                  localStorage.clear()
+                  location.reload()
+                }}>
+                <i className="fa-solid fa-right-from-bracket"></i>
+              </button>
             </motion.div>
 
-            
+
 
 
 
@@ -157,7 +166,7 @@ function NavBar() {
 
 
 
-      <div className="container border border-red-500 fixed z-10 top-6">
+      <div className="container fixed z-10 top-6">
 
 
         <div className="glass-container">

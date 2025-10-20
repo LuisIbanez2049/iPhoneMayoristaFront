@@ -22,15 +22,7 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
   const [viewAlertMesaggeFromAPI, setViewAlertMesaggeFromAPI] = useState(false)
   const [textMessageAlert, setTextMessageAlert] = useState("")
 
-  const bodyForAPI = {
-    productId: id,
-    name: "",
-    price: -1,
-    stock: -1,
-    categoryId: -1,
-    fileLinks: [],
-    description: descriptionEnviar,
-  }
+  
 
   const handleOnClickAcceptAlertMessage = () => {
     setViewAlertMesaggeFromAPI(false)
@@ -53,7 +45,19 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
   }, [])
 
 
-  const actualizarProducto = () => {
+  const actualizarProducto = (htmlContent) => {
+
+
+    const bodyForAPI = {
+    productId: id,
+    name: "",
+    price: -1,
+    stock: -1,
+    categoryId: -1,
+    fileLinks: [],
+    description: htmlContent,
+  }
+
     setIsLoading(true)
     console.log(bodyForAPI)
     const token = localStorage.getItem("token")
@@ -194,6 +198,7 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
 
   const execCommand = (command, value = null) => {
   if (["justifyLeft", "justifyCenter", "justifyRight"].includes(command)) {
+    setAreThereChanges(true)
     const selection = window.getSelection();
     if (!selection.rangeCount) return;
 
@@ -231,6 +236,7 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
       const newRange = document.createRange();
       newRange.selectNodeContents(node);
       selection.addRange(newRange);
+      handleSave()
     }
 
     // Aplicamos la clase según el comando
@@ -454,16 +460,12 @@ const DescriptionFormEDIT = ({ onActualizarDescripcion, id }) => {
 
   // Copiar HTML generado
   const copyHtml = () => {
-    handleSave()
     setAreThereChanges(false)
     const html = editorRef.current.innerHTML;
     navigator.clipboard.writeText(html).then(() => {
-      //alert("HTML copiado al portapapeles");
       console.log(html)
-      let enviarDescription = `${html}`
-      //onActualizarDescripcion('' + html)
       setDescriptionEnviar(html)
-      actualizarProducto()
+      actualizarProducto(html)
     });
   };
 

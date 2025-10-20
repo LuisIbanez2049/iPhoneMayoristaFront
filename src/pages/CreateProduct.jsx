@@ -119,7 +119,7 @@ function CreateProduct() {
 
 
 
-            <div className={`flex flex-col items-center mt-[20px]`}>
+            <div className={`hidden flex flex-col items-center mt-[20px]`}>
                 <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-red-700"
                     onClick={() => console.log(bodyForAPI)}>
                     VER API BODY

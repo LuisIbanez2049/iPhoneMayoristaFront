@@ -86,7 +86,7 @@ function ProductosMayoristas() {
   const productosParaMostrar = obtenerProductosFiltrados()
 
   return (
-    <div className='border border-black'>
+    <div className='pb-[50px]'>
       <LoadingSpinner isLoading={isLoading} />
 
       {/* 🔹 Filtros de categoría */}

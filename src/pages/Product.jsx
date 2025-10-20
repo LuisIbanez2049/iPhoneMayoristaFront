@@ -153,10 +153,10 @@ function Product() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Carousel Section */}
-          <div className="lg:w-[40vw] lg:h-[100vh] w-full lg:sticky lg:top-[20px] border border-red-700">
+          <div className="lg:w-[40vw] lg:h-[100vh] w-full lg:sticky lg:top-[20px] ">
             <div className="bg-gray-50 rounded-2xl p-4 shadow-sm ">
               <div className="relative bg-white rounded-xl overflow-hidden ">
-                <div className="relative w-full lg:h-[600px] h-[350px] border border-red-700">
+                <div className="relative w-full lg:h-[600px] h-[350px]">
                   {renderMedia(productData.fileLinks[currentIndex])}
                   
                   {/* Navigation Buttons */}
@@ -188,7 +188,7 @@ function Product() {
                 </div>
                 
                 {/* Thumbnails */}
-                <div className="flex gap-2 mt-4 overflow-x-auto py-2">
+                <div className="flex flex-wrap gap-2 mt-4 overflow-x-auto py-2">
                   {productData.fileLinks.map((link, index) => (
                     <button
                       key={index}
@@ -217,7 +217,7 @@ function Product() {
           
           {/* Product Info Section */}
           <div className="lg:w-[40vw] w-full flex flex-col">
-            <div className=" bg-white rounded-2xl p-6 shadow-sm sticky top-8 h-fit border border-black">
+            <div className=" bg-white rounded-2xl p-6 shadow-sm sticky top-8 h-fit border border-gray-300">
 
               <button className={`${isToken ? "show" : "hidden"} absolute right-5 bg-[#002fff] p-3 text-[white] font-semibold text-[20px] rounded-lg shadow-lg`}
               onClick={() => navigate(`/product/edit/${id}`)}>

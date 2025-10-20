@@ -24,6 +24,17 @@ function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categorias, setCategorias] = useState([])
 
+
+
+  //----------------------------FUNCIÓN PARA QUE CUANDO CARGUE EL COMPONENTE SE VEA DESDE EL PRINCIPIO Y NO DESDE CAULQUIER PARTE DE LA PAGINA
+  useEffect(() => {
+    window.scrollTo(0, 0); // X=0, Y=0 (arriba del todo)
+  }, []);
+  //----------------------------FUNCIÓN PARA QUE CUANDO CARGUE EL COMPONENTE SE VEA DESDE EL PRINCIPIO Y NO DESDE CAULQUIER PARTE DE LA PAGINA
+
+
+
+
   //-------------------------------- FUNCION VERIFICAR ANCHO DE PANTALLA -------------------------------- 
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 450);
 
@@ -205,7 +216,7 @@ function Home() {
 
       <div className='w-full py-[30px] h-[600px] '>
         <div className='flex flex-row flex-wrap justify-center gap-2 font-semibold text-gray-700 '>
-          <h1 className='text-[35px] text-center '>Lo que dicen quienes ya confiaron en 
+          <h1 className='text-[35px] text-center '>Lo que dicen quienes ya confiaron en
             <span className="font-bold text-[35px] lg:text-[35px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-red-500 to-orange-400 "> nosotros</span>
           </h1>
           {/* <h1 className="font-bold text-[30px] lg:text-[35px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-red-500 to-orange-400 ">nosotros</h1> */}
@@ -219,7 +230,7 @@ function Home() {
       </div>
 
       <div>
-        <SectionInfo/>
+        <SectionInfo />
       </div>
 
 
