@@ -7,10 +7,12 @@ function NavBar() {
 
   const [sizeNavBar, setSizeNavBar] = useState(53)
   const [heightNavBar, setHeightNavBar] = useState(50)
-  const token = localStorage.getItem("token")
   const [desactivarBotonHome, setDesactivarBotonHome] = useState(true)
 
   const navigate = useNavigate();
+
+  const token = localStorage.getItem("token")
+  const rol = sessionStorage.getItem("rol")
 
 
   //-------------------------------- FUNCION VERIFICAR ANCHO DE PANTALLA -------------------------------- 
@@ -104,23 +106,25 @@ function NavBar() {
               className={`glass-content glass-content--inline flex ${token ? "flex-col" : "flex-row"} lg:flex-row gap-[20px] justify-center rounded-lg`}
             >
 
-                <div className={` ${isMobileView ? "hidden" : "show"} px-4 py-3 text-black bg-[#ffffff18] rounded-full flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
-                  <button onClick={() => navigate("/")}>
-                    <i className="fa-brands fa-apple text-[25px]"></i>
-                  </button>
-                </div>
-
-              <div className={` ${isMobileView ? "show" : "hidden"} px-4 py-3 text-black bg-[#ffffff18] rounded-full flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
-                <button disabled={desactivarBotonHome}  onClick={() => navigate("/")}>
+              <div className={` ${isMobileView ? "hidden" : "show"} px-4 py-3 text-black bg-[#ffffff18] rounded-full flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
+                <button onClick={() => navigate("/")}>
                   <i className="fa-brands fa-apple text-[25px]"></i>
                 </button>
               </div>
 
-              <Link to="/products">
+              <div className={` ${isMobileView ? "show" : "hidden"} px-4 py-3 text-black bg-[#ffffff18] rounded-full flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500`}>
+                <button disabled={desactivarBotonHome} onClick={() => navigate("/")}>
+                  <i className="fa-brands fa-apple text-[25px]"></i>
+                </button>
+              </div>
+
+
+              <button onClick={() => navigate(`${rol ? "/mayorista" : "/products"}`)}>
                 <div className='p-3 text-black bg-[#ffffff18] rounded-2xl flex flex-row justify-center items-center shadow-lg hover:scale-[110%] hover:shadow-xl hover:bg-[#ffffffc7] transition-all duration-500'>
                   <h1 className='font-bold'>Store</h1>
                 </div>
-              </Link>
+              </button>
+
 
               <div className={`${token ? "show" : "hidden"}`}>
                 <Link to="/mayorista">

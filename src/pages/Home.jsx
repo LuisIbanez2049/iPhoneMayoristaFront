@@ -23,6 +23,9 @@ function Home() {
   const videos = [VideoiPhones, VideoMacs, VideoTablets, Iphones17]; // array con las rutas locales
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categorias, setCategorias] = useState([])
+  const [categoriasMayorista, setCategoriaMayorista] = useState([])
+
+  const rol = sessionStorage.getItem("rol")
 
 
 
@@ -84,7 +87,11 @@ function Home() {
     axios.get(`${baseUrl}/api/category/`)
       .then((response) => {
         console.log(response.data)
-        setCategorias(response.data.slice(0, 4))
+
+
+        const categoriasMinoristas = response.data.filter(categoria => categoria.sectionCategory === "MINORISTA")
+        console.log(response.data)
+        setCategorias(categoriasMinoristas.slice(0, 4))
       })
       .catch((error) => {
         console.log(error)
@@ -93,8 +100,20 @@ function Home() {
   }, [])
 
   const onIrATodosLosProductos = () => {
-    navigate("/products")
+    navigate(`${rol ? "/mayorista" : "/products"}`)
   }
+
+  useEffect(() => {
+    axios.get(`${baseUrl}/api/category/`)
+      .then((response) => {
+        const categoriasMayoristas = response.data.filter(categoria => categoria.sectionCategory === "MAYORISTA")
+        console.log(response.data)
+        setCategoriaMayorista(categoriasMayoristas)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }, [])
 
 
   return (
@@ -177,15 +196,33 @@ function Home() {
           <h1 className="font-bold text-[36px] lg:text-[46px] text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-red-500 to-orange-400 ">disponibles</h1>
         </div>
 
-        <div className={`${isMobileView ? "hidden" : "show"} flex flex-row justify-center items-center flex-wrap gap-8 p-4`}>
+        <div className={`${isMobileView ? "hidden" : "show"} ${rol ? "hidden" : "show"} flex flex-row justify-center items-center flex-wrap gap-8 p-4`}>
           {categorias && categorias.length > 0 && categorias.map((categoria) => {
             return (<CardFilterHome id={categoria.id} img={categoria.img} name={categoria.name} onActualizarId={onIrATodosLosProductos} />)
           })}
         </div>
 
-        <div className={`${isMobileView ? "show" : "hidden"} w-full flex flex-col items-center`}>
+        <div className={`${isMobileView ? "show" : "hidden"} ${rol ? "hidden" : "show"} w-full flex flex-col items-center`}>
           <CardsCarousel arrayCategories={categorias} />
         </div>
+
+
+
+
+        {/* -------------------------------SECTOR MAYORISTAS--------------------------------------------- */}
+        <div className={`${isMobileView ? "hidden" : "show"} ${rol ? "show" : "hidden"}  flex flex-row justify-center items-center flex-wrap gap-8 p-4`}>
+          {categoriasMayorista && categoriasMayorista.length > 0 && categoriasMayorista.map((categoria) => {
+            return (<CardFilterHome id={categoria.id} img={categoria.img} name={categoria.name} onActualizarId={onIrATodosLosProductos} />)
+          })}
+        </div>
+
+        <div className={`${isMobileView ? "show" : "hidden"} ${rol ? "show" : "hidden"} w-full flex flex-col items-center`}>
+          <CardsCarousel arrayCategories={categoriasMayorista} />
+        </div>
+        {/* -------------------------------SECTOR MAYORISTAS--------------------------------------------- */}
+
+
+
 
         <div className='w-full animate-pulse flex flex-col justify-center items-center my-[40px]'>
           <button className='py-2 px-4 rounded-full shadow-md bg-slate-100 border border-rose-300 hover:scale-[101%] hover:shadow-xl transition-all duration-500'

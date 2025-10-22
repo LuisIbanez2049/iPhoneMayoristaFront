@@ -16,9 +16,22 @@ function ProductosMayoristas() {
   const [seeFilteredProduct, setSeeFilteredProduct] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
+  const token = localStorage.getItem("token")
+
   // 🔍 Nuevos estados para filtros
   const [searchTerm, setSearchTerm] = useState("")
   const [sortOrder, setSortOrder] = useState("") // "asc" | "desc" | ""
+
+
+  useEffect(() => {
+    token ? " " : sessionStorage.setItem("rol", JSON.stringify("MAYORISTA"))
+  }, [])
+
+  //----------------------------FUNCIÓN PARA QUE CUANDO CARGUE EL COMPONENTE SE VEA DESDE EL PRINCIPIO Y NO DESDE CAULQUIER PARTE DE LA PAGINA
+  useEffect(() => {
+    window.scrollTo(0, 0); // X=0, Y=0 (arriba del todo)
+  }, []);
+  //----------------------------FUNCIÓN PARA QUE CUANDO CARGUE EL COMPONENTE SE VEA DESDE EL PRINCIPIO Y NO DESDE CAULQUIER PARTE DE LA PAGINA
 
   useEffect(() => {
     axios.get(`${baseUrl}/api/category/`)
@@ -90,7 +103,7 @@ function ProductosMayoristas() {
       <LoadingSpinner isLoading={isLoading} />
 
       {/* 🔹 Filtros de categoría */}
-      <div className='w-[100%] flex flex-row justify-start lg:justify-center px-6 py-3 gap-8 overflow-x-scroll mt-[120px] scroll-mx-7'>
+      <div className={`w-[100%] flex flex-row justify-${categorias.length > 1 ? "start" : "center"} sm:justify-center px-6 py-3 gap-8 overflow-x-scroll mt-[120px] scroll-mx-7`}>
         {categorias && categorias.length > 0 && categorias.map((categoria) => (
           <CardFilter
             key={categoria.id}

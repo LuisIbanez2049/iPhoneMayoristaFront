@@ -98,7 +98,7 @@ function Products() {
       <LoadingSpinner isLoading={isLoading} />
 
       {/* 🔹 Filtros de categoría */}
-      <div className='w-[100%] flex flex-row justify-start lg:justify-center px-6 py-3 gap-8 overflow-x-scroll mt-[120px] scroll-mx-7'>
+      <div className={`w-[100%] flex flex-row justify-${categorias.length > 1 ? "start" : "center"} sm:justify-center px-6 py-3 gap-8 overflow-x-scroll mt-[120px] scroll-mx-7`}>
         {categorias && categorias.length > 0 && categorias.map((categoria) => (
           <CardFilter
             key={categoria.id}
