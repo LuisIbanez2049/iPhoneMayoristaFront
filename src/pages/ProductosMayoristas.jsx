@@ -6,8 +6,11 @@ import LoadingSpinner from '../components/LoadingSpinner'
 
 function ProductosMayoristas() {
 
-  const baseUrl = "http://localhost:8080"
+  //const baseUrl = "http://localhost:8080"
+  const baseUrl = import.meta.env.VITE_APP_DATABASE_URL
 
+
+  
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [categoryId, setCategoryId] = useState(0)

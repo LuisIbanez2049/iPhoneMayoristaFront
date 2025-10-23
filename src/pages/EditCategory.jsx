@@ -8,8 +8,8 @@ import { tr } from 'framer-motion/client';
 
 function EditCategory() {
 
-    const baseUrl = "http://localhost:8080"
-
+    //const baseUrl = "http://localhost:8080"
+    const baseUrl = import.meta.env.VITE_APP_DATABASE_URL
 
     const [prevData, setPrevData] = useState({id: 0, sectionCategory:"", name: "", img: ""})
 

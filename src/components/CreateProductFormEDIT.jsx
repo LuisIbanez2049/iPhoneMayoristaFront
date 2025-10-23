@@ -5,8 +5,10 @@ import MessageAlert from './MessageAlert';
 
 const CreateProductFormEDIT = ({ onActualizar, id }) => {
 
-    const baseUrl = "http://localhost:8080"
+    //const baseUrl = "http://localhost:8080"
+    const baseUrl = import.meta.env.VITE_APP_DATABASE_URL
 
+    
     const [categories, setCategories] = useState([])
     const [areThereChanges, setAreThereChanges] = useState(false)
     const [isLoading, setIsLoading] = useState(false)

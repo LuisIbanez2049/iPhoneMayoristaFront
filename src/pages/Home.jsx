@@ -18,8 +18,10 @@ import CardFilterHome from '../components/CardFilterHome'
 
 function Home() {
 
-  const baseUrl = "http://localhost:8080"
+  //const baseUrl = "http://localhost:8080"
+  const baseUrl = import.meta.env.VITE_APP_DATABASE_URL
 
+  
   const videos = [VideoiPhones, VideoMacs, VideoTablets, Iphones17]; // array con las rutas locales
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categorias, setCategorias] = useState([])

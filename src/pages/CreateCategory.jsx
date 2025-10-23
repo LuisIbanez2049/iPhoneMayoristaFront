@@ -4,9 +4,14 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import MessageAlert from '../components/MessageAlert';
 import axios from 'axios';
 
+
+
 function CreateCategory() {
 
-    const baseUrl = "http://localhost:8080"
+
+
+    //const baseUrl = "http://localhost:8080"
+    const baseUrl = import.meta.env.VITE_APP_DATABASE_URL
 
 
     const [image, setImage] = useState([""])

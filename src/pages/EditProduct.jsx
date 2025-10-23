@@ -11,8 +11,8 @@ import { tr } from 'framer-motion/client'
 
 function EditProduct() {
 
-    const baseUrl = "http://localhost:8080"
-
+    //const baseUrl = "http://localhost:8080"
+    const baseUrl = import.meta.env.VITE_APP_DATABASE_URL
 
     const [productDataForm, setProductDataForm] = useState({ name: '', price: '', stock: '', categoryId: '' })
     const [fileLinks, setFileLinks] = useState([])
