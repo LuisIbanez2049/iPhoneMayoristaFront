@@ -3,7 +3,7 @@ import axios from 'axios'
 import LoadingSpinner from '../components/LoadingSpinner'
 import MessageAlert from '../components/MessageAlert'
 import { useNavigate, useParams } from 'react-router'
-import CreateProductFormEDIT from '../components/CreateProductFormEdit'
+import CreateProductFormEDIT from '../components/CreateProductFormEDIT'
 import DescriptionFormEDIT from '../components/DescriptionFormEDIT'
 import DragAndDropUploaderEDIT from '../components/DragAndDropUploaderEDIT'
 
@@ -130,7 +130,7 @@ function EditProduct() {
 
 
 
-            <div className={`flex flex-col items-center mt-[20px] hidden`}>
+            <div className={` items-center mt-[20px] hidden`}>
                 <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-red-700"
                     onClick={() => console.log(bodyForAPI)}>
                     VER API BODY
