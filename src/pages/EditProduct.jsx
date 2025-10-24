@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import DragAndDropUploader from '../components/DragAndDropUploader'
 import axios from 'axios'
 import LoadingSpinner from '../components/LoadingSpinner'
 import MessageAlert from '../components/MessageAlert'
@@ -7,7 +6,6 @@ import { useNavigate, useParams } from 'react-router'
 import CreateProductFormEDIT from '../components/CreateProductFormEdit'
 import DescriptionFormEDIT from '../components/DescriptionFormEDIT'
 import DragAndDropUploaderEDIT from '../components/DragAndDropUploaderEDIT'
-import { tr } from 'framer-motion/client'
 
 function EditProduct() {
 
