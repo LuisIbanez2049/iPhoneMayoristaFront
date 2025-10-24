@@ -137,6 +137,26 @@ function Products() {
       {/* 🔹 Mostrar todos los productos */}
       <div className={`w-[100%] flex flex-row justify-center px-[10%] overflow-hidden mt-[80px] gap-8 p-4 flex-wrap transition-all duration-700 ease-in-out
   ${seeFilteredProduct ? "opacity-0 absolute pointer-events-none z-0" : "opacity-100 translate-y-0 z-10"}`}>
+
+  {isLoading ? null : (
+    productosParaMostrar && productosParaMostrar.length > 0 ? (
+      productosParaMostrar.map((product) => (
+        <CardProduct
+          key={product.id}
+          img={product.firstImage}
+          name={product.name}
+          id={product.id}
+          price={product.price}
+        />
+      ))
+    ) : (
+      <p className='text-gray-600 mt-10'>No se encontraron productos</p>
+    )
+  )}
+</div>
+
+      {/* <div className={`w-[100%] flex flex-row justify-center px-[10%] overflow-hidden mt-[80px] gap-8 p-4 flex-wrap transition-all duration-700 ease-in-out
+  ${seeFilteredProduct ? "opacity-0 absolute pointer-events-none z-0" : "opacity-100 translate-y-0 z-10"}`}>
         {productosParaMostrar && productosParaMostrar.length > 0 ? (
           productosParaMostrar.map((product) => (
             <CardProduct
@@ -150,7 +170,7 @@ function Products() {
         ) : (
           <p className='text-gray-600 mt-10'>No se encontraron productos</p>
         )}
-      </div>
+      </div> */}
 
       {/* 🔹 Título de categoría seleccionada */}
       <h1 className={`font-bold text-[35px] text-center mt-[50px] text-[#000000c5] ${seeFilteredProduct ? "show" : "hidden"}`}>
