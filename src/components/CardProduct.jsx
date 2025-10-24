@@ -20,7 +20,7 @@ function CardProduct({ img, name, price, id }) {
 
         </div>
         <h1 className='w-[240px] font-semibold '>{name}</h1>
-        <h1 className='w-[240px]'>${price.toLocaleString()} <span className="text-[14px] text-gray-500"> USD</span> </h1>
+        <h1 className='w-[240px]'>${price ? price.toLocaleString(): 0} <span className="text-[14px] text-gray-500"> USD</span> </h1>
       </motion.div>
     </Link>
   )
