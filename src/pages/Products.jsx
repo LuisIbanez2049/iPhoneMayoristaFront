@@ -16,7 +16,7 @@ function Products() {
   const [nameFilteredCategory, setNameFilteredCategory] = useState("")
   const [categorias, setCategorias] = useState([])
   const [seeFilteredProduct, setSeeFilteredProduct] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   //----------------------------FUNCIÓN PARA QUE CUANDO CARGUE EL COMPONENTE SE VEA DESDE EL PRINCIPIO Y NO DESDE CAULQUIER PARTE DE LA PAGINA
   useEffect(() => {
@@ -35,9 +35,11 @@ function Products() {
       .then((response) => {
         const categoriasMinorista = response.data.filter(categoria => categoria.sectionCategory === "MINORISTA")
         setCategorias(categoriasMinorista)
+        setIsLoading(false)
       })
       .catch((error) => {
         console.log(error)
+        setIsLoading(false)
       })
   }, [])
 
