@@ -138,7 +138,7 @@ function EditCategory() {
 
             <div className='border border-gray-300 rounded-xl'>
                 <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6 rounded-t-lg">
-                    <h1 className="text-xl font-bold text-center">Crear categoría</h1>
+                    <h1 className="text-xl font-bold text-center">Editar categoría</h1>
                     {/* <p className="text-sm opacity-80">Agrega los detalles abajo</p> */}
                 </div>
 
