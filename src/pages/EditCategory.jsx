@@ -144,21 +144,21 @@ function EditCategory() {
 
                 <div className="p-6 space-y-4">
                     <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
                         <input
                             type="text"
                             id="name"
                             name="name"
                             value={name}
                             onChange={(e) => setName(e.target.value) }
-                            placeholder="Enter product name"
+                            placeholder="Ingrese nombre de la categoria"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
                         <select
                             id="category"
                             name="category"
@@ -167,7 +167,7 @@ function EditCategory() {
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         >
-                            <option value="">Select a category</option>
+                            <option value="">Seleccione una categoria</option>
                             <option value="MINORISTA">Minorista</option>
                             <option value="MAYORISTA">Mayorista</option>
                         </select>

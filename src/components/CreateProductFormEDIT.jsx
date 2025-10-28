@@ -199,7 +199,7 @@ const CreateProductFormEDIT = ({ onActualizar, id }) => {
                             {/* Name Field */}
                             <div className="space-y-2">
                                 <label htmlFor="name" className="block text-sm font-semibold text-gray-700">
-                                    Name
+                                    Nombre
                                 </label>
                                 <input
                                     type="text"
@@ -208,7 +208,7 @@ const CreateProductFormEDIT = ({ onActualizar, id }) => {
                                     value={formData.name}
                                     onChange={handleChange}
                                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
-                                    placeholder="Enter product name"
+                                    placeholder="Ingrese nombre de producto"
                                     required
                                 />
                             </div>
@@ -216,7 +216,7 @@ const CreateProductFormEDIT = ({ onActualizar, id }) => {
                             {/* Price Field */}
                             <div className="space-y-2">
                                 <label htmlFor="price" className="block text-sm font-semibold text-gray-700">
-                                    Price
+                                    Precio
                                 </label>
                                 <div className="relative">
                                     <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
@@ -246,7 +246,7 @@ const CreateProductFormEDIT = ({ onActualizar, id }) => {
                                     onChange={handleChange}
                                     min="0"
                                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500"
-                                    placeholder="Enter available stock"
+                                    placeholder="Ingrese stock disponible"
                                     required
                                 />
                             </div>
@@ -254,7 +254,7 @@ const CreateProductFormEDIT = ({ onActualizar, id }) => {
                             {/* Category Field */}
                             <div className="space-y-2">
                                 <label htmlFor="categoryId" className="block text-sm font-semibold text-gray-700">
-                                    Category
+                                    Categoria
                                 </label>
                                 <select
                                     id="categoryId"
@@ -264,7 +264,7 @@ const CreateProductFormEDIT = ({ onActualizar, id }) => {
                                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 bg-white"
                                     required
                                 >
-                                    <option value="">Select a category</option>
+                                    <option value="">Seleccione una categoria</option>
                                     {categories && categories.length > 0 && categories.map((category) => (
                                         <option key={category.id} value={category.id}>
                                             {category.name}
