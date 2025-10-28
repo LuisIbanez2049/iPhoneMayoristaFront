@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CardFilter from '../components/CardFilter'
 import axios from 'axios'
 import CardProduct from '../components/CardProduct'
@@ -10,7 +10,7 @@ function ProductosMayoristas() {
   const baseUrl = import.meta.env.VITE_APP_DATABASE_URL
 
 
-  
+
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [categoryId, setCategoryId] = useState(0)
@@ -35,6 +35,33 @@ function ProductosMayoristas() {
     window.scrollTo(0, 0); // X=0, Y=0 (arriba del todo)
   }, []);
   //----------------------------FUNCIÓN PARA QUE CUANDO CARGUE EL COMPONENTE SE VEA DESDE EL PRINCIPIO Y NO DESDE CAULQUIER PARTE DE LA PAGINA
+
+
+
+
+  //----------------------------FUNCIÓN PARA DETECTAR CUANDO SE GENERA EL SCROLL EN EL DIV QUE CONTIENE LAS TARJETAS DE CATEGORÍAS----------------------------
+  const containerRef = useRef(null);
+  const [hasScroll, setHasScroll] = useState(false);
+
+  useEffect(() => {
+    const checkScroll = () => {
+      if (!containerRef.current) return;
+      const { scrollWidth, clientWidth } = containerRef.current;
+      setHasScroll(scrollWidth > clientWidth);
+    };
+
+    // Ejecutar al montar y cada vez que cambie el número de categorías
+    checkScroll();
+
+    // También ejecutar al cambiar el tamaño de la ventana
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [categorias]);
+  //----------------------------FUNCIÓN PARA DETECTAR CUANDO SE GENERA EL SCROLL EN EL DIV QUE CONTIENE LAS TARJETAS DE CATEGORÍAS----------------------------
+
+
+
+
 
   useEffect(() => {
     axios.get(`${baseUrl}/api/category/`)
@@ -106,7 +133,7 @@ function ProductosMayoristas() {
       <LoadingSpinner isLoading={isLoading} />
 
       {/* 🔹 Filtros de categoría */}
-      <div className={`w-[100%] flex flex-row justify-${categorias.length > 1 ? "start" : "center"} sm:justify-center px-6 py-3 gap-8 overflow-x-scroll mt-[120px] scroll-mx-7`}>
+      <div ref={containerRef} className={`w-[100%] flex flex-row ${hasScroll ? "justify-start" : "justify-center"} px-6 py-3 gap-8 overflow-x-scroll mt-[120px] scroll-mx-7`}>
         {categorias && categorias.length > 0 && categorias.map((categoria) => (
           <CardFilter
             key={categoria.id}
